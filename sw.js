@@ -1,6 +1,6 @@
 /* Named Reactions — offline service worker.
    Caches the app shell so it opens with no network, every time. */
-var CACHE = 'named-reactions-v1';
+var CACHE = 'named-reactions-v3';
 var ASSETS = ['./', 'index.html', 'apple-touch-icon.png'];
 
 self.addEventListener('install', function (e) {

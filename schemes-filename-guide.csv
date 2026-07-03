@@ -1,0 +1,174 @@
+reaction_name,overview_image,mechanism_image
+Aldol Reaction,schemes/aldol.png,schemes/aldol-mechanism.png
+Appel Reaction,schemes/appel.png,schemes/appel-mechanism.png
+Arndt–Eistert Synthesis,schemes/arndt-eistert.png,schemes/arndt-eistert-mechanism.png
+Baeyer–Villiger Oxidation,schemes/baeyer-villiger.png,schemes/baeyer-villiger-mechanism.png
+Morita–Baylis–Hillman Reaction,schemes/baylis-hillman.png,schemes/baylis-hillman-mechanism.png
+Beckmann Rearrangement,schemes/beckmann.png,schemes/beckmann-mechanism.png
+Birch Reduction,schemes/birch.png,schemes/birch-mechanism.png
+Buchwald–Hartwig Cross-Coupling,schemes/buchwald-hartwig.png,schemes/buchwald-hartwig-mechanism.png
+Cannizzaro Reaction,schemes/cannizzaro.png,schemes/cannizzaro-mechanism.png
+Chan–Evans–Lam Cross-Coupling,schemes/chan-lam.png,schemes/chan-lam-mechanism.png
+Claisen Condensation,schemes/claisen-cond.png,schemes/claisen-cond-mechanism.png
+Claisen Rearrangement,schemes/claisen-rearr.png,schemes/claisen-rearr-mechanism.png
+Corey–Fuchs Alkynylation,schemes/corey-fuchs.png,schemes/corey-fuchs-mechanism.png
+Curtius Rearrangement,schemes/curtius.png,schemes/curtius-mechanism.png
+Dess–Martin Oxidation,schemes/dess-martin.png,schemes/dess-martin-mechanism.png
+Diels–Alder Reaction,schemes/diels-alder.png,schemes/diels-alder-mechanism.png
+Dieckmann Condensation,schemes/dieckmann.png,schemes/dieckmann-mechanism.png
+Eschweiler–Clarke Reaction,schemes/eschweiler-clarke.png,schemes/eschweiler-clarke-mechanism.png
+Finkelstein Reaction,schemes/finkelstein.png,schemes/finkelstein-mechanism.png
+Fischer Esterification,schemes/fischer-ester.png,schemes/fischer-ester-mechanism.png
+Fischer Indole Synthesis,schemes/fischer-indole.png,schemes/fischer-indole-mechanism.png
+Friedel–Crafts Acylation,schemes/friedel-crafts-acyl.png,schemes/friedel-crafts-acyl-mechanism.png
+Friedel–Crafts Alkylation,schemes/friedel-crafts-alkyl.png,schemes/friedel-crafts-alkyl-mechanism.png
+Gabriel Synthesis,schemes/gabriel.png,schemes/gabriel-mechanism.png
+Grignard Reaction,schemes/grignard.png,schemes/grignard-mechanism.png
+Olefin (Alkene) Metathesis,schemes/grubbs.png,schemes/grubbs-mechanism.png
+Heck Cross-Coupling,schemes/heck.png,schemes/heck-mechanism.png
+Hofmann Elimination,schemes/hofmann-elim.png,schemes/hofmann-elim-mechanism.png
+Hofmann Rearrangement,schemes/hofmann-rearr.png,schemes/hofmann-rearr-mechanism.png
+Horner–Wadsworth–Emmons,schemes/hwe.png,schemes/hwe-mechanism.png
+Hunsdiecker Reaction,schemes/hunsdiecker.png,schemes/hunsdiecker-mechanism.png
+Jones Oxidation,schemes/jones.png,schemes/jones-mechanism.png
+Kolbe–Schmitt Reaction,schemes/kolbe-schmitt.png,schemes/kolbe-schmitt-mechanism.png
+Knoevenagel Condensation,schemes/knoevenagel.png,schemes/knoevenagel-mechanism.png
+Mannich Reaction,schemes/mannich.png,schemes/mannich-mechanism.png
+McMurry Coupling,schemes/mcmurry.png,schemes/mcmurry-mechanism.png
+Michael Addition,schemes/michael.png,schemes/michael-mechanism.png
+Mitsunobu Reaction,schemes/mitsunobu.png,schemes/mitsunobu-mechanism.png
+Mukaiyama Aldol Reaction,schemes/mukaiyama.png,schemes/mukaiyama-mechanism.png
+Negishi Cross-Coupling,schemes/negishi.png,schemes/negishi-mechanism.png
+Nozaki–Hiyama–Kishi,schemes/nozaki-hiyama.png,schemes/nozaki-hiyama-mechanism.png
+Ozonolysis,schemes/ozonolysis.png,schemes/ozonolysis-mechanism.png
+Paal–Knorr Syntheses,schemes/paal-knorr.png,schemes/paal-knorr-mechanism.png
+Passerini Reaction,schemes/passerini.png,schemes/passerini-mechanism.png
+Pinacol–Pinacolone Rearrangement,schemes/pinacol.png,schemes/pinacol-mechanism.png
+Prins Reaction,schemes/prins.png,schemes/prins-mechanism.png
+Reformatsky Reaction,schemes/reformatsky.png,schemes/reformatsky-mechanism.png
+Ritter Reaction,schemes/ritter.png,schemes/ritter-mechanism.png
+Robinson Annulation,schemes/robinson.png,schemes/robinson-mechanism.png
+Sandmeyer Reaction,schemes/sandmeyer.png,schemes/sandmeyer-mechanism.png
+Sonogashira Cross-Coupling,schemes/sonogashira.png,schemes/sonogashira-mechanism.png
+Staudinger Reaction,schemes/staudinger.png,schemes/staudinger-mechanism.png
+Stille Cross-Coupling,schemes/stille.png,schemes/stille-mechanism.png
+Strecker Reaction,schemes/strecker.png,schemes/strecker-mechanism.png
+Suzuki–Miyaura Cross-Coupling,schemes/suzuki.png,schemes/suzuki-mechanism.png
+Swern Oxidation,schemes/swern.png,schemes/swern-mechanism.png
+Ugi Reaction,schemes/ugi.png,schemes/ugi-mechanism.png
+Wacker Oxidation,schemes/wacker.png,schemes/wacker-mechanism.png
+Williamson Ether Synthesis,schemes/williamson.png,schemes/williamson-mechanism.png
+Wittig Reaction,schemes/wittig.png,schemes/wittig-mechanism.png
+Wohl–Ziegler Reaction,schemes/wohl-ziegler.png,schemes/wohl-ziegler-mechanism.png
+Wolff–Kishner Reduction,schemes/wolff-kishner.png,schemes/wolff-kishner-mechanism.png
+Acyloin Condensation,schemes/acyloin.png,schemes/acyloin-mechanism.png
+Alkyne Zipper Reaction,schemes/alkyne-zipper.png,schemes/alkyne-zipper-mechanism.png
+Arbuzov Reaction,schemes/arbuzov.png,schemes/arbuzov-mechanism.png
+Aromatic Electrophilic Substitution,schemes/eas.png,schemes/eas-mechanism.png
+Aromatic Nucleophilic Substitution,schemes/snar.png,schemes/snar-mechanism.png
+Aromatic Radical Nucleophilic Substitution,schemes/srn1-ar.png,schemes/srn1-ar-mechanism.png
+Bamford–Stevens Reaction,schemes/bamford-stevens.png,schemes/bamford-stevens-mechanism.png
+Barton Decarboxylation,schemes/barton-decarbox.png,schemes/barton-decarbox-mechanism.png
+Barton–McCombie Deoxygenation,schemes/barton-mccombie.png,schemes/barton-mccombie-mechanism.png
+Benzilic Acid Rearrangement,schemes/benzilic.png,schemes/benzilic-mechanism.png
+Benzoin Condensation,schemes/benzoin.png,schemes/benzoin-mechanism.png
+Benzyne Mechanism,schemes/benzyne.png,schemes/benzyne-mechanism.png
+Bergman Cyclization,schemes/bergman.png,schemes/bergman-mechanism.png
+Bischler–Napieralski Reaction,schemes/bischler-napieralski.png,schemes/bischler-napieralski-mechanism.png
+Brook Rearrangement,schemes/brook.png,schemes/brook-mechanism.png
+Brown Hydroboration,schemes/hydroboration.png,schemes/hydroboration-mechanism.png
+Buchner Ring Expansion,schemes/buchner.png,schemes/buchner-mechanism.png
+Chichibabin Amination,schemes/chichibabin.png,schemes/chichibabin-mechanism.png
+Chugaev Elimination,schemes/chugaev.png,schemes/chugaev-mechanism.png
+Clemmensen Reduction,schemes/clemmensen.png,schemes/clemmensen-mechanism.png
+Cope Elimination,schemes/cope-elim.png,schemes/cope-elim-mechanism.png
+Cope Rearrangement,schemes/cope-rearr.png,schemes/cope-rearr-mechanism.png
+Corey–Bakshi–Shibata (CBS) Reduction,schemes/cbs.png,schemes/cbs-mechanism.png
+Corey–Kim Oxidation,schemes/corey-kim.png,schemes/corey-kim-mechanism.png
+Corey–Winter Olefination,schemes/corey-winter.png,schemes/corey-winter-mechanism.png
+Criegee Oxidation,schemes/criegee.png,schemes/criegee-mechanism.png
+CuAAC (Click Reaction),schemes/cuaac.png,schemes/cuaac-mechanism.png
+Danheiser Benzannulation,schemes/danheiser.png,schemes/danheiser-mechanism.png
+Darzens Glycidic Ester Condensation,schemes/darzens.png,schemes/darzens-mechanism.png
+De Mayo Reaction,schemes/de-mayo.png,schemes/de-mayo-mechanism.png
+Diazotization (Diazonium Salt),schemes/diazotization.png,schemes/diazotization-mechanism.png
+Di-π-Methane Rearrangement,schemes/dipi-methane.png,schemes/dipi-methane-mechanism.png
+Eglinton Coupling,schemes/eglinton.png,schemes/eglinton-mechanism.png
+Electrophilic Addition Mechanism,schemes/electro-addn.png,schemes/electro-addn-mechanism.png
+Elimination Mechanism (E1 / E2),schemes/elim-mech.png,schemes/elim-mech-mechanism.png
+Ene Reaction,schemes/ene.png,schemes/ene-mechanism.png
+Eschenmoser Methenylation,schemes/eschenmoser-methen.png,schemes/eschenmoser-methen-mechanism.png
+Eschenmoser–Tanabe Fragmentation,schemes/eschenmoser-tanabe.png,schemes/eschenmoser-tanabe-mechanism.png
+Evans–Tishchenko Reduction,schemes/evans-tishchenko.png,schemes/evans-tishchenko-mechanism.png
+Favorskii Rearrangement,schemes/favorskii.png,schemes/favorskii-mechanism.png
+Fleming–Tamao Oxidation,schemes/fleming-tamao.png,schemes/fleming-tamao-mechanism.png
+Gewald Reaction,schemes/gewald.png,schemes/gewald-mechanism.png
+Glaser–Eglinton–Hay Coupling,schemes/glaser.png,schemes/glaser-mechanism.png
+Grob Fragmentation,schemes/grob.png,schemes/grob-mechanism.png
+Haloform Reaction,schemes/haloform.png,schemes/haloform-mechanism.png
+Hell–Volhard–Zelinsky Reaction,schemes/hvz.png,schemes/hvz-mechanism.png
+Henry Reaction,schemes/henry.png,schemes/henry-mechanism.png
+Hiyama Cross-Coupling,schemes/hiyama.png,schemes/hiyama-mechanism.png
+Ireland–Claisen Rearrangement,schemes/ireland-claisen.png,schemes/ireland-claisen-mechanism.png
+Jacobsen–Katsuki Asymmetric Epoxidation,schemes/jacobsen.png,schemes/jacobsen-mechanism.png
+Johnson–Claisen Rearrangement,schemes/johnson-claisen.png,schemes/johnson-claisen-mechanism.png
+Julia–Lythgoe Olefination,schemes/julia-lythgoe.png,schemes/julia-lythgoe-mechanism.png
+Julia–Kocienski Olefination,schemes/julia-kocienski.png,schemes/julia-kocienski-mechanism.png
+Kornblum–DeLaMare Rearrangement,schemes/kornblum-delamare.png,schemes/kornblum-delamare-mechanism.png
+Krapcho Dealkoxycarbonylation,schemes/krapcho.png,schemes/krapcho-mechanism.png
+Kucherov Reaction,schemes/kucherov.png,schemes/kucherov-mechanism.png
+Kumada Cross-Coupling,schemes/kumada.png,schemes/kumada-mechanism.png
+Ley–Griffith Oxidation,schemes/ley-griffith.png,schemes/ley-griffith-mechanism.png
+Liebeskind–Srogl Coupling,schemes/liebeskind-srogl.png,schemes/liebeskind-srogl-mechanism.png
+Luche Reduction,schemes/luche.png,schemes/luche-mechanism.png
+Meerwein–Ponndorf–Verley Reduction,schemes/mpv.png,schemes/mpv-mechanism.png
+Minisci Reaction,schemes/minisci.png,schemes/minisci-mechanism.png
+Mislow–Evans Rearrangement,schemes/mislow-evans.png,schemes/mislow-evans-mechanism.png
+Miyaura Borylation,schemes/miyaura.png,schemes/miyaura-mechanism.png
+Mizoroki–Heck Reaction,schemes/mizoroki-heck.png,schemes/mizoroki-heck-mechanism.png
+Mukaiyama Hydration,schemes/mukaiyama-hydration.png,schemes/mukaiyama-hydration-mechanism.png
+Nazarov Cyclization,schemes/nazarov.png,schemes/nazarov-mechanism.png
+Nef Reaction,schemes/nef.png,schemes/nef-mechanism.png
+Nicholas Reaction,schemes/nicholas.png,schemes/nicholas-mechanism.png
+Norrish Reactions,schemes/norrish.png,schemes/norrish-mechanism.png
+Nucleophilic Substitution Mechanism (Sₙ1 / Sₙ2),schemes/sn-mech.png,schemes/sn-mech-mechanism.png
+Oppenauer Oxidation,schemes/oppenauer.png,schemes/oppenauer-mechanism.png
+Overman Rearrangement,schemes/overman.png,schemes/overman-mechanism.png
+Oxy-Cope Rearrangement,schemes/oxy-cope.png,schemes/oxy-cope-mechanism.png
+Paternò–Büchi Reaction,schemes/paterno-buchi.png,schemes/paterno-buchi-mechanism.png
+Pauson–Khand Reaction,schemes/pauson-khand.png,schemes/pauson-khand-mechanism.png
+Payne Rearrangement,schemes/payne.png,schemes/payne-mechanism.png
+Peptide (Amide) Coupling,schemes/peptide-coupling.png,schemes/peptide-coupling-mechanism.png
+Peterson Olefination,schemes/peterson.png,schemes/peterson-mechanism.png
+Pfitzner–Moffatt Oxidation,schemes/pfitzner-moffatt.png,schemes/pfitzner-moffatt-mechanism.png
+Pictet–Spengler Reaction,schemes/pictet-spengler.png,schemes/pictet-spengler-mechanism.png
+Polonovski Reaction,schemes/polonovski.png,schemes/polonovski-mechanism.png
+Prilezhaev Epoxidation,schemes/prilezhaev.png,schemes/prilezhaev-mechanism.png
+Pummerer Reaction,schemes/pummerer.png,schemes/pummerer-mechanism.png
+Ramberg–Bäcklund Rearrangement,schemes/ramberg-backlund.png,schemes/ramberg-backlund-mechanism.png
+Ramirez Olefination,schemes/ramirez.png,schemes/ramirez-mechanism.png
+Riley Oxidation,schemes/riley.png,schemes/riley-mechanism.png
+Rosenmund Reduction,schemes/rosenmund.png,schemes/rosenmund-mechanism.png
+Rubottom Oxidation,schemes/rubottom.png,schemes/rubottom-mechanism.png
+Saegusa–Ito Oxidation,schemes/saegusa.png,schemes/saegusa-mechanism.png
+Hosomi–Sakurai Reaction,schemes/sakurai.png,schemes/sakurai-mechanism.png
+Schmidt Reaction,schemes/schmidt.png,schemes/schmidt-mechanism.png
+Shapiro Reaction,schemes/shapiro.png,schemes/shapiro-mechanism.png
+Sharpless Asymmetric Dihydroxylation,schemes/sharpless-dihydrox.png,schemes/sharpless-dihydrox-mechanism.png
+Sharpless Asymmetric Epoxidation,schemes/sharpless-epox.png,schemes/sharpless-epox-mechanism.png
+Simmons–Smith Cyclopropanation,schemes/simmons-smith.png,schemes/simmons-smith-mechanism.png
+Steglich Esterification,schemes/steglich.png,schemes/steglich-mechanism.png
+Stetter Reaction,schemes/stetter.png,schemes/stetter-mechanism.png
+Stork Enamine Alkylation,schemes/stork-enamine.png,schemes/stork-enamine-mechanism.png
+Takai–Utimoto Olefination,schemes/takai.png,schemes/takai-mechanism.png
+Tebbe / Petasis Olefination,schemes/tebbe.png,schemes/tebbe-mechanism.png
+Tsuji–Trost Allylation,schemes/tsuji-trost.png,schemes/tsuji-trost-mechanism.png
+Ullmann Coupling,schemes/ullmann.png,schemes/ullmann-mechanism.png
+Upjohn Dihydroxylation,schemes/upjohn.png,schemes/upjohn-mechanism.png
+Vilsmeier–Haack Reaction,schemes/vilsmeier.png,schemes/vilsmeier-mechanism.png
+Wagner–Meerwein Rearrangement,schemes/wagner-meerwein.png,schemes/wagner-meerwein-mechanism.png
+Wharton Reaction,schemes/wharton.png,schemes/wharton-mechanism.png
+Wolff Rearrangement,schemes/wolff.png,schemes/wolff-mechanism.png
+Wittig Rearrangement,schemes/wittig-rearr.png,schemes/wittig-rearr-mechanism.png
+Baylis–Hillman Reaction,schemes/baylis-hillman-classic.png,schemes/baylis-hillman-classic-mechanism.png
+Semipinacol Rearrangement,schemes/semipinacol.png,schemes/semipinacol-mechanism.png
