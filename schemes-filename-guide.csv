@@ -22,7 +22,7 @@ Fischer Esterification,schemes/fischer-ester.png,MISSING
 Fischer Indole Synthesis,schemes/fischer-indole.png,added
 Friedel–Crafts Acylation,schemes/friedel-crafts-acyl.png,added
 Friedel–Crafts Alkylation,schemes/friedel-crafts-alkyl.png,added
-Gabriel Synthesis,schemes/gabriel.png,MISSING
+Gabriel Synthesis,schemes/gabriel.png,added
 Grignard Reaction,schemes/grignard.png,added
 Olefin (Alkene) Metathesis,schemes/grubbs.png,MISSING
 Heck Cross-Coupling,schemes/heck.png,added
@@ -45,7 +45,7 @@ Paal–Knorr Syntheses,schemes/paal-knorr.png,MISSING
 Passerini Reaction,schemes/passerini.png,MISSING
 Pinacol–Pinacolone Rearrangement,schemes/pinacol.png,added
 Prins Reaction,schemes/prins.png,added
-Reformatsky Reaction,schemes/reformatsky.png,MISSING
+Reformatsky Reaction,schemes/reformatsky.png,added
 Ritter Reaction,schemes/ritter.png,added
 Robinson Annulation,schemes/robinson.png,added
 Sandmeyer Reaction,schemes/sandmeyer.png,MISSING
@@ -74,9 +74,9 @@ Benzilic Acid Rearrangement,schemes/benzilic.png,added
 Benzoin Condensation,schemes/benzoin.png,added
 Benzyne Mechanism,schemes/benzyne.png,MISSING
 Bergman Cyclization,schemes/bergman.png,added
-Bischler–Napieralski Reaction,schemes/bischler-napieralski.png,MISSING
+Bischler–Napieralski Reaction,schemes/bischler-napieralski.png,added
 Brook Rearrangement,schemes/brook.png,added
-Brown Hydroboration,schemes/hydroboration.png,MISSING
+Brown Hydroboration,schemes/hydroboration.png,added
 Buchner Ring Expansion,schemes/buchner.png,added
 Chichibabin Amination,schemes/chichibabin.png,MISSING
 Chugaev Elimination,schemes/chugaev.png,added
@@ -100,14 +100,14 @@ Ene Reaction,schemes/ene.png,added
 Eschenmoser Methenylation,schemes/eschenmoser-methen.png,MISSING
 Eschenmoser–Tanabe Fragmentation,schemes/eschenmoser-tanabe.png,added
 Evans–Tishchenko Reduction,schemes/evans-tishchenko.png,added
-Favorskii Rearrangement,schemes/favorskii.png,MISSING
+Favorskii Rearrangement,schemes/favorskii.png,added
 Fleming–Tamao Oxidation,schemes/fleming-tamao.png,added
 Gewald Reaction,schemes/gewald.png,MISSING
 Glaser–Eglinton–Hay Coupling,schemes/glaser.png,added
 Grob Fragmentation,schemes/grob.png,added
 Haloform Reaction,schemes/haloform.png,MISSING
 Hell–Volhard–Zelinsky Reaction,schemes/hvz.png,MISSING
-Henry Reaction,schemes/henry.png,MISSING
+Henry Reaction,schemes/henry.png,added
 Hiyama Cross-Coupling,schemes/hiyama.png,MISSING
 Ireland–Claisen Rearrangement,schemes/ireland-claisen.png,added
 Jacobsen–Katsuki Asymmetric Epoxidation,schemes/jacobsen.png,added
@@ -141,7 +141,7 @@ Payne Rearrangement,schemes/payne.png,added
 Peptide (Amide) Coupling,schemes/peptide-coupling.png,MISSING
 Peterson Olefination,schemes/peterson.png,added
 Pfitzner–Moffatt Oxidation,schemes/pfitzner-moffatt.png,added
-Pictet–Spengler Reaction,schemes/pictet-spengler.png,MISSING
+Pictet–Spengler Reaction,schemes/pictet-spengler.png,added
 Polonovski Reaction,schemes/polonovski.png,MISSING
 Prilezhaev Epoxidation,schemes/prilezhaev.png,MISSING
 Pummerer Reaction,schemes/pummerer.png,added
@@ -149,7 +149,7 @@ Ramberg–Bäcklund Rearrangement,schemes/ramberg-backlund.png,MISSING
 Ramirez Olefination,schemes/ramirez.png,added
 Riley Oxidation,schemes/riley.png,added
 Rosenmund Reduction,schemes/rosenmund.png,added
-Rubottom Oxidation,schemes/rubottom.png,MISSING
+Rubottom Oxidation,schemes/rubottom.png,added
 Saegusa–Ito Oxidation,schemes/saegusa.png,added
 Hosomi–Sakurai Reaction,schemes/sakurai.png,added
 Schmidt Reaction,schemes/schmidt.png,added
@@ -168,7 +168,7 @@ Upjohn Dihydroxylation,schemes/upjohn.png,MISSING
 Vilsmeier–Haack Reaction,schemes/vilsmeier.png,added
 Wagner–Meerwein Rearrangement,schemes/wagner-meerwein.png,added
 Wharton Reaction,schemes/wharton.png,added
-Wolff Rearrangement,schemes/wolff.png,MISSING
+Wolff Rearrangement,schemes/wolff.png,added
 Wittig Rearrangement,schemes/wittig-rearr.png,added
 Baylis–Hillman Reaction,schemes/baylis-hillman-classic.png,added
 Semipinacol Rearrangement,schemes/semipinacol.png,added
