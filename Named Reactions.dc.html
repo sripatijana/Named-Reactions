@@ -165,7 +165,7 @@
           <div style="margin-top:18px;">
             <sc-if value="{{ detail.hasScheme }}" hint-placeholder-val="{{ false }}">
               <div onclick="{{ detail.onExpand }}" style="position:relative;width:100%;border-radius:12px;overflow:hidden;border:1px solid rgba(33,29,24,.12);background:#fff;cursor:zoom-in;display:flex;align-items:center;justify-content:center;" style-active="opacity:.92;">
-                <img src="{{ detail.schemeUrl }}" onError="{{ detail.onSchemeError }}" alt="reaction scheme" style="display:block;width:100%;height:auto;background:#fff;">
+                <img src="{{ detailSchemeUrl }}" alt="reaction scheme" style="display:block;width:100%;height:auto;background:#fff;">
                 <div style="position:absolute;bottom:8px;left:8px;display:flex;align-items:center;gap:5px;background:rgba(33,29,24,.72);color:#f5f2ea;font:500 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.04em;padding:5px 8px;border-radius:6px;">⤢ TAP TO ENLARGE</div>
               </div>
             </sc-if>
@@ -253,7 +253,7 @@
           <div onclick="{{ zoom.onClose }}" style="flex:none;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#f5f2ea;cursor:pointer;">✕</div>
         </div>
         <div onclick="{{ zoom.onToggle }}" style="flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:{{ zoom.align }};justify-content:center;padding:10px;cursor:{{ zoom.cursor }};">
-          <img src="{{ zoom.src }}" onError="{{ zoom.onError }}" alt="reaction mechanism" style="{{ zoom.imgStyle }}">
+          <img src="{{ zoomImgUrl }}" alt="reaction mechanism" style="{{ zoomImgStyle }}">
         </div>
         <div style="flex:none;text-align:center;padding:9px 16px max(env(safe-area-inset-bottom),12px);font:500 10px/1.4 'IBM Plex Mono',monospace;letter-spacing:.03em;color:rgba(245,242,234,.55);">{{ zoom.hint }}</div>
       </div>
@@ -326,6 +326,7 @@ class Component extends DCLogic {
   }
 
   schemeSrc(id) { return 'schemes/' + id + '.png'; }
+  hasSchemeFile(id) { return Component.SCHEME_SET.has(id); }
   markSchemeBroken(url) {
     this.setState((s) => {
       const b = Object.assign({}, s.brokenSchemes);
@@ -398,7 +399,7 @@ class Component extends DCLogic {
             onOpen: () => this.openDetail(x.id)
           }));
         const schemeUrl = this.schemeSrc(r.id);
-        const schemeBroken = !!this.state.brokenSchemes[schemeUrl];
+        const schemeBroken = !this.hasSchemeFile(r.id) || !!this.state.brokenSchemes[schemeUrl];
         detail = Object.assign({}, base, {
           overview: r.overview,
           conditions: r.conditions || [],
@@ -437,7 +438,9 @@ class Component extends DCLogic {
       noFavorites: favCount === 0,
 
       showDetail: !!detail,
-      detail,
+      detail: detail || { schemeUrl: '', hasScheme: false, noScheme: false, onSchemeError: () => {}, onExpand: () => {}, conditions: [], steps: [], related: [], hasRelated: false, onToggleFav: () => {} },
+      detailSchemeUrl: detail ? detail.schemeUrl : '',
+      detailSchemeError: detail ? detail.onSchemeError : (() => {}),
       backLabel: tab === 'favorites' ? 'Favorites' : 'Directory',
       back: () => this.closeDetail(),
 
@@ -448,7 +451,12 @@ class Component extends DCLogic {
       favTabIcon: tab === 'favorites' ? '★' : '☆',
 
       showZoom: !!this.state.zoom,
-      zoom: this.state.zoom ? {
+      zoomImgUrl: this.state.zoom ? this.state.zoom.src : '',
+      zoomImgError: () => { if (this.state.zoom) { this.markSchemeBroken(this.state.zoom.src); this.closeZoom(); } },
+      zoomImgStyle: this.state.zoom ? (this.state.zoomFit === 'fit'
+        ? 'max-width:100%;max-height:100%;object-fit:contain;display:block;background:#fff;border-radius:6px;'
+        : 'width:220%;max-width:none;height:auto;display:block;background:#fff;border-radius:6px;') : 'display:none;',
+      zoom: (this.state.zoom ? {
         name: this.state.zoom.name,
         src: this.state.zoom.src,
         onClose: () => this.closeZoom(),
@@ -460,10 +468,11 @@ class Component extends DCLogic {
         align: this.state.zoomFit === 'fit' ? 'center' : 'flex-start',
         cursor: this.state.zoomFit === 'fit' ? 'zoom-in' : 'zoom-out',
         hint: this.state.zoomFit === 'fit' ? 'Tap image to zoom in · scroll to pan' : 'Tap image to fit screen'
-      } : null
+      } : { name: '', src: '', onClose: () => {}, onToggle: () => {}, onError: () => {}, imgStyle: 'display:none;', align: 'center', cursor: 'default', hint: '' })
     };
   }
 }
+Component.SCHEME_SET = new Set(["acyloin","aldol","arbuzov","arndt-eistert","baeyer-villiger","bamford-stevens","barton-mccombie","baylis-hillman","baylis-hillman-classic","beckmann","benzilic","benzoin","bergman","birch","bischler-napieralski","brook","buchner","cbs","chugaev","claisen-cond","claisen-rearr","clemmensen","cope-rearr","corey-fuchs","corey-kim","corey-winter","criegee","curtius","danheiser","darzens","de-mayo","dess-martin","dieckmann","diels-alder","eglinton","ene","eschenmoser-tanabe","evans-tishchenko","favorskii","finkelstein","fischer-indole","fleming-tamao","friedel-crafts-acyl","friedel-crafts-alkyl","gabriel","glaser","grignard","grob","heck","henry","hofmann-rearr","hwe","hydroboration","ireland-claisen","jacobsen","johnson-claisen","julia-lythgoe","knoevenagel","kornblum-delamare","krapcho","kumada","luche","mannich","michael","mislow-evans","mitsunobu","mizoroki-heck","mpv","mukaiyama","nef","negishi","nicholas","norrish","oppenauer","overman","oxy-cope","paterno-buchi","pauson-khand","payne","peterson","pfitzner-moffatt","pictet-spengler","pinacol","prins","pummerer","ramirez","reformatsky","riley","ritter","robinson","rosenmund","rubottom","saegusa","sakurai","schmidt","semipinacol","shapiro","sharpless-dihydrox","sharpless-epox","simmons-smith","sonogashira","staudinger","stetter","stille","stork-enamine","strecker","suzuki","swern","takai","tebbe","tsuji-trost","vilsmeier","wacker","wagner-meerwein","wharton","williamson","wittig","wittig-rearr","wolff","wolff-kishner"]);
 </script>
 </body>
 </html>
