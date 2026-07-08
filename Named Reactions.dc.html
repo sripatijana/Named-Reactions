@@ -27,6 +27,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <script src="nr-data.js"></script>
+<script src="nr-fg.js"></script>
+<script src="nr-data-ext.js"></script>
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -126,6 +128,207 @@
       </div>
       </sc-if>
 
+      <!-- ============ EXPLORE TAB ============ -->
+      <sc-if value="{{ showExplore }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
+        <div style="flex:none;padding:6px 22px 12px;">
+          <div style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:oklch(0.47 0.11 25);margin-bottom:8px;">Study Lenses</div>
+          <div style="font-family:'Spectral',serif;font-weight:600;font-size:30px;line-height:1.02;color:#211d18;letter-spacing:-0.01em;">Explore</div>
+        </div>
+
+        <!-- segmented control -->
+        <div style="flex:none;padding:0 16px 12px;">
+          <div style="display:flex;gap:3px;padding:3px;background:rgba(33,29,24,.06);border-radius:10px;">
+            <div onclick="{{ segTimeline.onSel }}" style="{{ segTimeline.style }}">Timeline</div>
+            <div onclick="{{ segCategory.onSel }}" style="{{ segCategory.style }}">Category</div>
+            <div onclick="{{ segGroups.onSel }}" style="{{ segGroups.style }}">Groups</div>
+          </div>
+        </div>
+
+        <div class="nr-scroll" style="flex:1;min-height:0;overflow-y:auto;padding-bottom:24px;">
+
+          <!-- TIMELINE -->
+          <sc-if value="{{ showTimeline }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:0 22px 10px;font:400 12px/1.5 -apple-system,system-ui;color:#8a8378;">Two centuries of discovery, {{ yearMin }}–{{ yearMax }}. Tap any reaction to open it.</div>
+            <sc-for list="{{ eras }}" as="era" hint-placeholder-count="4">
+              <div style="position:sticky;top:0;z-index:2;padding:12px 22px 7px;background:linear-gradient(#f5f2ea 72%,rgba(245,242,234,0));backdrop-filter:blur(2px);">
+                <div style="font-family:'Spectral',serif;font-weight:600;font-size:17px;color:#211d18;">{{ era.title }}</div>
+                <div style="margin-top:2px;font:500 10px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:oklch(0.55 0.09 25);">{{ era.range }} · {{ era.count }} reactions</div>
+              </div>
+              <sc-for list="{{ era.items }}" as="item" hint-placeholder-count="5">
+                <div onclick="{{ item.onOpen }}" style="display:flex;align-items:center;gap:12px;padding:10px 22px;cursor:pointer;border-bottom:1px solid rgba(33,29,24,.055);" style-active="background:rgba(33,29,24,.03);">
+                  <div style="flex:none;width:40px;font:600 13px/1 'IBM Plex Mono',monospace;color:oklch(0.55 0.09 25);">{{ item.year }}</div>
+                  <span style="flex:none;width:7px;height:7px;border-radius:50%;background:{{ item.catColor }};"></span>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-family:'Spectral',serif;font-weight:600;font-size:15.5px;line-height:1.15;color:#211d18;">{{ item.name }}</div>
+                    <div style="margin-top:2px;font:400 11.5px/1.3 -apple-system,system-ui;color:#8a8378;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ item.summary }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </sc-for>
+          </sc-if>
+
+          <!-- CATEGORY -->
+          <sc-if value="{{ showCategory }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 22px 10px;font:400 12px/1.5 -apple-system,system-ui;color:#8a8378;">Grouped by mechanistic class — what kind of transformation each reaction performs.</div>
+            <sc-for list="{{ catGroups }}" as="cg" hint-placeholder-count="6">
+              <div style="position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:10px;padding:11px 22px 7px;background:linear-gradient(#f5f2ea 72%,rgba(245,242,234,0));backdrop-filter:blur(2px);">
+                <span style="flex:none;width:9px;height:9px;border-radius:2px;background:{{ cg.color }};"></span>
+                <div style="font-family:'Spectral',serif;font-weight:600;font-size:16px;color:#211d18;">{{ cg.label }}</div>
+                <div style="font:500 10.5px/1 'IBM Plex Mono',monospace;color:#a49d90;">{{ cg.count }}</div>
+                <div style="flex:1;height:1px;background:rgba(33,29,24,.09);"></div>
+              </div>
+              <sc-for list="{{ cg.items }}" as="item" hint-placeholder-count="4">
+                <div onclick="{{ item.onOpen }}" style="display:flex;align-items:center;gap:6px;padding:10px 16px 10px 22px;cursor:pointer;border-bottom:1px solid rgba(33,29,24,.055);" style-active="background:rgba(33,29,24,.03);">
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-family:'Spectral',serif;font-weight:600;font-size:15.5px;line-height:1.15;color:#211d18;">{{ item.name }}</div>
+                    <div style="margin-top:2px;font:400 11.5px/1.3 -apple-system,system-ui;color:#8a8378;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ item.summary }}</div>
+                  </div>
+                  <div style="flex:none;font:400 10.5px/1 'IBM Plex Mono',monospace;color:#a49d90;">{{ item.year }}</div>
+                </div>
+              </sc-for>
+            </sc-for>
+          </sc-if>
+
+          <!-- GROUPS (functional group) -->
+          <sc-if value="{{ showGroups }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 16px 10px;">
+              <div style="display:flex;gap:3px;padding:3px;background:rgba(33,29,24,.06);border-radius:10px;">
+                <div onclick="{{ dirFrom.onSel }}" style="{{ dirFrom.style }}">I have this ▸ convert it</div>
+                <div onclick="{{ dirTo.onSel }}" style="{{ dirTo.style }}">I want this ▸ prepare it</div>
+              </div>
+              <div style="margin-top:9px;padding:0 4px;font:400 12px/1.5 -apple-system,system-ui;color:#8a8378;">{{ fgHint }}</div>
+            </div>
+            <sc-for list="{{ fgList }}" as="fg" hint-placeholder-count="8">
+              <div style="margin:0 16px 9px;border:1px solid rgba(33,29,24,.1);border-radius:12px;overflow:hidden;background:#fff;">
+                <div onclick="{{ fg.onToggle }}" style="display:flex;align-items:center;gap:11px;padding:13px 15px;cursor:pointer;" style-active="background:rgba(33,29,24,.02);">
+                  <span style="flex:none;width:9px;height:9px;border-radius:2px;background:{{ fg.color }};"></span>
+                  <div style="flex:1;font-family:'Spectral',serif;font-weight:600;font-size:16px;color:#211d18;">{{ fg.name }}</div>
+                  <div style="font:500 11px/1 'IBM Plex Mono',monospace;color:#a49d90;">{{ fg.count }}</div>
+                  <div style="font-size:11px;color:oklch(0.55 0.09 25);width:14px;text-align:center;">{{ fg.caret }}</div>
+                </div>
+                <sc-if value="{{ fg.open }}" hint-placeholder-val="{{ false }}">
+                  <sc-for list="{{ fg.items }}" as="it" hint-placeholder-count="3">
+                    <div onclick="{{ it.onOpen }}" style="display:flex;align-items:center;gap:10px;padding:10px 15px;border-top:1px solid rgba(33,29,24,.06);cursor:pointer;" style-active="background:rgba(33,29,24,.03);">
+                      <div style="flex:1;min-width:0;font-family:'Spectral',serif;font-weight:500;font-size:14.5px;color:#211d18;">{{ it.name }}</div>
+                      <div style="flex:none;font:500 10.5px/1.3 'IBM Plex Mono',monospace;color:{{ it.arrowColor }};text-align:right;max-width:52%;">{{ it.transform }}</div>
+                    </div>
+                  </sc-for>
+                </sc-if>
+              </div>
+            </sc-for>
+          </sc-if>
+
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ QUIZ TAB ============ -->
+      <sc-if value="{{ showQuiz }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
+
+        <!-- START SCREEN -->
+        <sc-if value="{{ quizStart }}" hint-placeholder-val="{{ true }}">
+        <div class="nr-scroll" style="flex:1;min-height:0;overflow-y:auto;padding:6px 22px 24px;">
+          <div style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:oklch(0.47 0.11 25);margin-bottom:8px;">Test Yourself</div>
+          <div style="font-family:'Spectral',serif;font-weight:600;font-size:30px;line-height:1.02;color:#211d18;letter-spacing:-0.01em;">Quiz</div>
+          <div style="margin-top:9px;font:400 13px/1.5 -apple-system,system-ui;color:#7c766b;">Ten questions, drawn fresh from all {{ total }} reactions each round — transformations, classes, mechanisms, namesakes and timelines. Every answer links back to the reaction.</div>
+
+          <div style="margin-top:22px;display:flex;align-items:center;gap:14px;padding:16px 18px;background:oklch(0.96 0.03 55);border:1px solid oklch(0.85 0.06 55);border-radius:14px;">
+            <div style="flex:none;width:44px;height:44px;border-radius:12px;background:oklch(0.55 0.13 55);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;">★</div>
+            <div style="flex:1;">
+              <div style="font:500 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:oklch(0.5 0.1 55);">Best Score</div>
+              <div style="margin-top:4px;font-family:'Spectral',serif;font-weight:600;font-size:20px;color:#211d18;">{{ quizBestLabel }}</div>
+            </div>
+          </div>
+
+          <div style="margin-top:24px;font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a8378;">Quiz me on</div>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;">
+            <sc-for list="{{ quizScopes }}" as="s" hint-placeholder-count="6">
+              <div onclick="{{ s.onSel }}" style="{{ s.style }}">{{ s.label }}</div>
+            </sc-for>
+          </div>
+
+          <div onclick="{{ onStartQuiz }}" style="margin-top:30px;display:flex;align-items:center;justify-content:center;gap:9px;padding:17px;border-radius:14px;background:oklch(0.47 0.11 25);color:#fff;cursor:pointer;font:600 15px/1 -apple-system,system-ui;" style-active="opacity:.9;">
+            Start quiz <span style="font-size:17px;margin-top:-1px;">›</span>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ACTIVE QUESTION -->
+        <sc-if value="{{ quizPlaying }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
+          <!-- progress header -->
+          <div style="flex:none;padding:8px 22px 14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div onclick="{{ onExitQuiz }}" style="font:500 13px/1 -apple-system,system-ui;color:oklch(0.47 0.11 25);cursor:pointer;padding:4px 0;">✕ Exit</div>
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div style="font:500 12px/1 'IBM Plex Mono',monospace;color:#8a8378;">{{ quizProgressLabel }}</div>
+                <div style="display:flex;align-items:center;gap:5px;font:600 12px/1 'IBM Plex Mono',monospace;color:oklch(0.5 0.1 55);"><span style="font-size:13px;">🔥</span>{{ quizStreak }}</div>
+              </div>
+            </div>
+            <div style="margin-top:11px;height:5px;border-radius:3px;background:rgba(33,29,24,.1);overflow:hidden;">
+              <div style="height:100%;background:oklch(0.47 0.11 25);border-radius:3px;width:{{ quizProgressPct }};transition:width .3s;"></div>
+            </div>
+          </div>
+
+          <div class="nr-scroll" style="flex:1;min-height:0;overflow-y:auto;padding:6px 22px 20px;">
+            <div style="font:600 10px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:oklch(0.55 0.09 25);">{{ quizQTag }}</div>
+            <div style="margin-top:12px;font-family:'Spectral',serif;font-weight:600;font-size:22px;line-height:1.25;color:#211d18;white-space:pre-line;">{{ quizPrompt }}</div>
+
+            <div style="margin-top:22px;display:flex;flex-direction:column;gap:11px;">
+              <sc-for list="{{ quizOptions }}" as="o" hint-placeholder-count="4">
+                <div onclick="{{ o.onPick }}" style="{{ o.style }}">
+                  <span style="flex:1;">{{ o.label }}</span>
+                  <span style="flex:none;font-size:16px;font-weight:700;">{{ o.mark }}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- feedback -->
+            <sc-if value="{{ quizAnswered }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:20px;padding:16px 17px;border-radius:14px;background:{{ quizFbBg }};border:1px solid {{ quizFbBorder }};">
+                <div style="font:600 12px/1 -apple-system,system-ui;color:{{ quizFbColor }};">{{ quizFbTitle }}</div>
+                <div style="margin-top:8px;font-family:'Spectral',serif;font-weight:400;font-size:14.5px;line-height:1.5;color:#3a3630;">{{ quizExplain }}</div>
+                <div onclick="{{ onReviewAnswer }}" style="margin-top:12px;display:inline-flex;align-items:center;gap:6px;font:500 12.5px/1 -apple-system,system-ui;color:oklch(0.47 0.11 25);cursor:pointer;">Open reaction ›</div>
+              </div>
+            </sc-if>
+          </div>
+
+          <!-- next button -->
+          <sc-if value="{{ quizAnswered }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:none;padding:12px 22px max(env(safe-area-inset-bottom),16px);border-top:1px solid rgba(33,29,24,.08);">
+              <div onclick="{{ onNextQuiz }}" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;border-radius:14px;background:oklch(0.47 0.11 25);color:#fff;cursor:pointer;font:600 15px/1 -apple-system,system-ui;" style-active="opacity:.9;">{{ quizNextLabel }} <span style="font-size:17px;margin-top:-1px;">›</span></div>
+            </div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <!-- RESULTS -->
+        <sc-if value="{{ quizResults }}" hint-placeholder-val="{{ false }}">
+        <div class="nr-scroll" style="flex:1;min-height:0;overflow-y:auto;padding:6px 22px 24px;display:flex;flex-direction:column;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 0;">
+            <div style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:oklch(0.47 0.11 25);">{{ quizResultTag }}</div>
+            <div style="margin-top:18px;width:120px;height:120px;border-radius:50%;background:{{ quizResultRing }};display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div style="font-family:'Spectral',serif;font-weight:700;font-size:38px;line-height:1;color:#fff;">{{ quizScore }}</div>
+              <div style="font:500 11px/1 'IBM Plex Mono',monospace;color:rgba(255,255,255,.8);margin-top:3px;">of 10</div>
+            </div>
+            <div style="margin-top:22px;font-family:'Spectral',serif;font-weight:600;font-size:24px;color:#211d18;">{{ quizResultTitle }}</div>
+            <div style="margin-top:8px;font:400 13.5px/1.5 -apple-system,system-ui;color:#7c766b;max-width:280px;">{{ quizResultMsg }}</div>
+            <sc-if value="{{ quizNewBest }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:16px;padding:8px 14px;border-radius:999px;background:oklch(0.55 0.13 55);color:#fff;font:600 12px/1 -apple-system,system-ui;">★ New best score!</div>
+            </sc-if>
+          </div>
+          <div style="flex:none;display:flex;flex-direction:column;gap:10px;">
+            <div onclick="{{ onStartQuiz }}" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;border-radius:14px;background:oklch(0.47 0.11 25);color:#fff;cursor:pointer;font:600 15px/1 -apple-system,system-ui;" style-active="opacity:.9;">Play again</div>
+            <div onclick="{{ onExitQuiz }}" style="display:flex;align-items:center;justify-content:center;padding:15px;border-radius:14px;background:#fff;border:1px solid rgba(33,29,24,.14);color:#211d18;cursor:pointer;font:600 14px/1 -apple-system,system-ui;" style-active="background:rgba(33,29,24,.03);">Back to start</div>
+          </div>
+        </div>
+        </sc-if>
+
+      </div>
+      </sc-if>
+
       <!-- ============ BOTTOM TAB BAR ============ -->
       <div style="flex:none;height:78px;display:flex;border-top:1px solid rgba(33,29,24,.09);background:rgba(245,242,234,.94);backdrop-filter:blur(10px);padding-bottom:max(env(safe-area-inset-bottom),14px);">
         <div onclick="{{ goDirectory }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ dirTabColor }};">
@@ -135,6 +338,19 @@
             <div style="height:2px;background:currentColor;border-radius:1px;"></div>
           </div>
           <div style="font:600 10px/1 -apple-system,system-ui;letter-spacing:.02em;">Directory</div>
+        </div>
+        <div onclick="{{ goExplore }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ expTabColor }};">
+          <div style="width:17px;height:17px;border:2px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <div style="width:2px;height:8px;background:currentColor;transform:rotate(45deg);transform-origin:center;border-radius:1px;"></div>
+          </div>
+          <div style="font:600 10px/1 -apple-system,system-ui;letter-spacing:.02em;">Explore</div>
+        </div>
+        <div onclick="{{ goQuiz }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ quizTabColor }};">
+          <div style="width:17px;height:17px;position:relative;display:flex;align-items:center;justify-content:center;">
+            <div style="width:13px;height:13px;border:2px solid currentColor;border-radius:50%;"></div>
+            <div style="position:absolute;font:700 9px/1 'IBM Plex Mono',monospace;color:currentColor;">?</div>
+          </div>
+          <div style="font:600 10px/1 -apple-system,system-ui;letter-spacing:.02em;">Quiz</div>
         </div>
         <div onclick="{{ goFavorites }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ favTabColor }};">
           <div style="font-size:16px;line-height:1;">{{ favTabIcon }}</div>
@@ -263,7 +479,8 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { loaded: false, tab: 'directory', detailId: null, favorites: {}, brokenSchemes: {}, zoom: null, zoomFit: 'fit', mechAvail: {} };
+  state = { loaded: false, tab: 'directory', exploreView: 'timeline', fgDir: 'from', fgOpen: {}, detailId: null, favorites: {}, brokenSchemes: {}, zoom: null, zoomFit: 'fit', mechAvail: {},
+    quizScope: 'all', quizActive: false, quizQ: null, quizIdx: 0, quizScore: 0, quizStreak: 0, quizPicked: null, quizDone: false, quizBest: 0, quizRoundLog: [] };
 
   constructor(props) {
     super(props);
@@ -282,6 +499,10 @@ class Component extends DCLogic {
       const saved = JSON.parse(localStorage.getItem('nr-favorites') || '{}');
       if (saved && typeof saved === 'object') this.setState({ favorites: saved });
     } catch (e) {}
+    try {
+      const best = parseInt(localStorage.getItem('nr-quiz-best') || '0', 10);
+      if (!isNaN(best) && best > 0) this.setState({ quizBest: best });
+    } catch (e) {}
     const load = (tries) => {
       const d = window.NR_DATA;
       if (d && d.reactions) {
@@ -293,6 +514,15 @@ class Component extends DCLogic {
       }
     };
     load(60);
+    // The extension pack (nr-data-ext.js) may merge additional reactions
+    // asynchronously — poll briefly and re-render whenever the count grows.
+    let lastLen = 0, polls = 0;
+    const watch = setInterval(() => {
+      const d = window.NR_DATA;
+      const len = d && d.reactions ? d.reactions.length : 0;
+      if (len && len !== lastLen) { lastLen = len; this.data = d.reactions; this.forceUpdate(); }
+      if (++polls > 40) clearInterval(watch);
+    }, 75);
   }
 
   catColor(cat) {
@@ -323,6 +553,181 @@ class Component extends DCLogic {
     const el = document.getElementById('sec-' + letter);
     const sc = this.scrollRef.current;
     if (el && sc) sc.scrollTop = el.offsetTop;
+  }
+
+  setExploreView(v) { this.setState({ exploreView: v }); }
+  setFgDir(d) { this.setState({ fgDir: d, fgOpen: {} }); }
+  toggleFg(name) {
+    this.setState((s) => {
+      const o = Object.assign({}, s.fgOpen);
+      if (o[name]) delete o[name]; else o[name] = true;
+      return { fgOpen: o };
+    });
+  }
+  segStyle(active) {
+    return 'flex:1;text-align:center;padding:9px 6px;border-radius:8px;cursor:pointer;'
+      + "font:600 12.5px/1 -apple-system,system-ui;letter-spacing:.01em;"
+      + (active
+          ? 'background:#fff;color:oklch(0.42 0.11 25);box-shadow:0 1px 2px rgba(33,29,24,.12);'
+          : 'background:transparent;color:#8a8378;');
+  }
+  dirStyle(active) {
+    return 'flex:1;text-align:center;padding:9px 6px;border-radius:8px;cursor:pointer;'
+      + "font:600 11.5px/1.1 -apple-system,system-ui;"
+      + (active
+          ? 'background:#fff;color:oklch(0.42 0.11 25);box-shadow:0 1px 2px rgba(33,29,24,.12);'
+          : 'background:transparent;color:#8a8378;');
+  }
+
+  // ===================== QUIZ =====================
+  quizPool() {
+    const scope = this.state.quizScope;
+    if (scope === 'all' || !scope) return this.data.slice();
+    return this.data.filter((r) => r.category === scope);
+  }
+  shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  makeQuestion() {
+    const pool = this.quizPool();
+    if (pool.length < 4) return null;
+    const all = this.data;
+    const r = this.pick(pool);
+    // choose a template that this reaction can support
+    const templates = ['summary', 'category', 'person', 'year'];
+    if (r.mechanism && r.mechanism.length) templates.push('mechanism');
+    const fg = (window.NR_FG && window.NR_FG.map) ? window.NR_FG.map[r.id] : null;
+    if (fg && fg.from && fg.to) templates.push('transform');
+    const kind = this.pick(templates);
+    const mono = (s) => (s || '?').toString();
+
+    // helper: n distinct wrong options from a value-getter, excluding correct
+    const distractors = (getter, correctVal, n, sourcePool) => {
+      const seen = {}; seen[correctVal] = true;
+      const out = [];
+      const src = this.shuffle(sourcePool || all);
+      for (const x of src) {
+        const v = getter(x);
+        if (v == null || v === '' || seen[v]) continue;
+        seen[v] = true; out.push(v);
+        if (out.length >= n) break;
+      }
+      return out;
+    };
+
+    let q;
+    if (kind === 'summary') {
+      const correct = r.summary;
+      const opts = this.shuffle([correct].concat(distractors((x) => x.summary, correct, 3)));
+      q = { kind, prompt: 'What transformation does the ' + r.name + ' accomplish?', tag: 'Transformation',
+        options: opts, answer: correct, rid: r.id, explain: r.name + ': ' + r.summary };
+    } else if (kind === 'category') {
+      const correct = this.catLabel(r.category);
+      const opts = this.shuffle([correct].concat(distractors((x) => this.catLabel(x.category), correct, 3)));
+      q = { kind, prompt: 'Which class does the ' + r.name + ' belong to?', tag: 'Category',
+        options: opts, answer: correct, rid: r.id, explain: 'The ' + r.name + ' is a ' + correct.toLowerCase() + ' reaction.' };
+    } else if (kind === 'person') {
+      const correct = r.person;
+      const opts = this.shuffle([correct].concat(distractors((x) => x.person, correct, 3)));
+      q = { kind, prompt: 'Who is the ' + r.name + ' named after?', tag: 'Namesake',
+        options: opts, answer: correct, rid: r.id, explain: 'Named after ' + r.person + (r.personYears ? ' (' + r.personYears + ').' : '.') };
+    } else if (kind === 'year') {
+      // "which came first" — 4 reactions, pick the earliest
+      const yr = (x) => { const n = parseInt(x.year, 10); return isNaN(n) ? 99999 : n; };
+      const others = this.shuffle(all.filter((x) => x.id !== r.id && yr(x) !== yr(r))).slice(0, 3);
+      const set = this.shuffle([r].concat(others));
+      const earliest = set.slice().sort((a, b) => yr(a) - yr(b))[0];
+      q = { kind, prompt: 'Which of these was discovered first?', tag: 'Timeline',
+        options: set.map((x) => x.name), answer: earliest.name, rid: earliest.id,
+        explain: earliest.name + ' (' + earliest.year + ') came first.' };
+    } else if (kind === 'mechanism') {
+      const correct = r.name;
+      const opts = this.shuffle([correct].concat(distractors((x) => x.name, correct, 3, this.data)));
+      const step = this.pick(r.mechanism);
+      q = { kind, prompt: 'Which reaction includes this mechanistic step?\n\u201C' + step + '\u201D', tag: 'Mechanism',
+        options: opts, answer: correct, rid: r.id, explain: 'This step belongs to the ' + r.name + '.' };
+    } else { // transform
+      const correct = r.name;
+      // distractors: other reactions
+      const opts = this.shuffle([correct].concat(distractors((x) => x.name, correct, 3, this.data)));
+      const fromS = fg.from.join(' / ');
+      const toS = fg.to.join(' / ');
+      q = { kind, prompt: 'Which reaction converts ' + fromS + ' \u2192 ' + toS + '?', tag: 'Functional groups',
+        options: opts, answer: correct, rid: r.id, explain: r.name + ': ' + fromS + ' \u2192 ' + toS + '.' };
+    }
+    return q;
+  }
+
+  startQuiz() {
+    const q = this.makeQuestion();
+    this.setState({ quizActive: true, quizDone: false, quizQ: q, quizIdx: 0, quizScore: 0, quizStreak: 0, quizPicked: null, quizRoundLog: [] });
+  }
+  setQuizScope(s) { this.setState({ quizScope: s }); }
+  answerQuiz(opt) {
+    if (this.state.quizPicked != null) return; // already answered
+    const q = this.state.quizQ;
+    const correct = opt === q.answer;
+    this.setState((s) => {
+      const streak = correct ? s.quizStreak + 1 : 0;
+      const score = correct ? s.quizScore + 1 : s.quizScore;
+      const log = s.quizRoundLog.concat([{ correct }]);
+      return { quizPicked: opt, quizScore: score, quizStreak: streak, quizRoundLog: log };
+    });
+  }
+  nextQuiz() {
+    const TOTAL = 10;
+    if (this.state.quizIdx + 1 >= TOTAL) {
+      // finish
+      const finalScore = this.state.quizScore;
+      let best = this.state.quizBest;
+      if (finalScore > best) {
+        best = finalScore;
+        try { localStorage.setItem('nr-quiz-best', String(best)); } catch (e) {}
+      }
+      this.setState({ quizDone: true, quizBest: best });
+      return;
+    }
+    const q = this.makeQuestion();
+    this.setState((s) => ({ quizQ: q, quizIdx: s.quizIdx + 1, quizPicked: null }));
+  }
+  exitQuiz() { this.setState({ quizActive: false, quizDone: false, quizQ: null, quizPicked: null }); }
+  reviewAnswer() { const q = this.state.quizQ; if (q && q.rid) { this.setState({ tab: 'directory', detailId: q.rid, quizActive: false }); } }
+
+  quizScopeStyle(active) {
+    return 'padding:9px 14px;border-radius:999px;cursor:pointer;font:600 12.5px/1 -apple-system,system-ui;white-space:nowrap;'
+      + (active
+          ? 'background:oklch(0.47 0.11 25);color:#fff;'
+          : 'background:#fff;color:#6a655b;border:1px solid rgba(33,29,24,.12);');
+  }
+  quizOptStyle(opt) {
+    const picked = this.state.quizPicked;
+    const q = this.state.quizQ;
+    const base = 'display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:16px 16px;border-radius:14px;cursor:pointer;font-family:\'Spectral\',serif;font-weight:500;font-size:15.5px;line-height:1.35;transition:background .15s;';
+    if (picked == null) {
+      return base + 'background:#fff;border:1.5px solid rgba(33,29,24,.12);color:#211d18;';
+    }
+    if (opt === q.answer) {
+      return base + 'background:oklch(0.95 0.06 150);border:1.5px solid oklch(0.6 0.14 150);color:oklch(0.32 0.08 150);';
+    }
+    if (opt === picked) {
+      return base + 'background:oklch(0.95 0.05 25);border:1.5px solid oklch(0.62 0.16 25);color:oklch(0.4 0.12 25);';
+    }
+    return base + 'background:#fff;border:1.5px solid rgba(33,29,24,.09);color:rgba(33,29,24,.4);';
+  }
+  quizOptMark(opt) {
+    const picked = this.state.quizPicked;
+    const q = this.state.quizQ;
+    if (picked == null) return '';
+    if (opt === q.answer) return '✓';
+    if (opt === picked) return '✗';
+    return '';
   }
 
   schemeSrc(id) { return 'schemes/' + id + '.png'; }
@@ -423,11 +828,110 @@ class Component extends DCLogic {
     const activeAccent = 'oklch(0.47 0.11 25)';
     const inactive = 'rgba(33,29,24,.34)';
 
+    // ===== EXPLORE: shared row VM =====
+    const rowVM = (r) => {
+      const v = this.vm(r);
+      v.catColor = this.catColor(r.category);
+      return v;
+    };
+
+    // ===== TIMELINE =====
+    const yearNum = (r) => { const n = parseInt(r.year, 10); return isNaN(n) ? 9999 : n; };
+    const eraDefs = [
+      { title: 'Foundations', range: '1820s–1899', lo: 0, hi: 1899 },
+      { title: 'Classical Era', range: '1900–1949', lo: 1900, hi: 1949 },
+      { title: 'Modern Methods', range: '1950–1979', lo: 1950, hi: 1979 },
+      { title: 'Contemporary', range: '1980–present', lo: 1980, hi: 99999 }
+    ];
+    const byYear = this.data.slice().sort((a, b) => yearNum(a) - yearNum(b) || a.name.localeCompare(b.name));
+    const eras = eraDefs.map((e) => {
+      const items = byYear.filter((r) => { const y = yearNum(r); return y >= e.lo && y <= e.hi; }).map(rowVM);
+      return { title: e.title, range: e.range, count: items.length, items };
+    }).filter((e) => e.count > 0);
+    const yr = byYear.map(yearNum).filter((y) => y < 9999);
+
+    // ===== CATEGORY =====
+    const catMap = {};
+    this.data.forEach((r) => { (catMap[r.category] = catMap[r.category] || []).push(r); });
+    const catGroups = Object.keys(catMap).map((c) => ({
+      id: c,
+      label: this.catLabel(c),
+      color: this.catColor(c),
+      count: catMap[c].length,
+      items: catMap[c].slice().sort((a, b) => a.name.localeCompare(b.name)).map(rowVM)
+    })).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+
+    // ===== FUNCTIONAL GROUPS =====
+    const FG = (typeof window !== 'undefined' && window.NR_FG) ? window.NR_FG : { groups: [], map: {} };
+    const dir = this.state.fgDir;          // 'from' = convert; 'to' = prepare
+    const other = dir === 'from' ? 'to' : 'from';
+    const byId = {};
+    this.data.forEach((x) => { byId[x.id] = x; });
+    const fgHue = {};
+    FG.groups.forEach((g, i) => { fgHue[g] = (i * 41) % 360; });
+    const bucket = {};
+    Object.keys(FG.map).forEach((id) => {
+      const rec = FG.map[id];
+      const r = byId[id];
+      if (!r) return;
+      (rec[dir] || []).forEach((g) => {
+        (bucket[g] = bucket[g] || []).push({
+          name: r.name,
+          onOpen: () => this.openDetail(id),
+          transform: (dir === 'from' ? '→ ' : '← ') + (rec[other] || []).join(' · '),
+          arrowColor: dir === 'from' ? 'oklch(0.5 0.1 150)' : 'oklch(0.5 0.1 250)'
+        });
+      });
+    });
+    const fgList = FG.groups.filter((g) => bucket[g] && bucket[g].length).map((g) => {
+      const open = !!this.state.fgOpen[g];
+      return {
+        name: g,
+        color: `oklch(0.58 0.13 ${fgHue[g] || 25})`,
+        count: bucket[g].length,
+        open,
+        caret: open ? '▾' : '▸',
+        onToggle: () => this.toggleFg(g),
+        items: bucket[g].slice().sort((a, b) => a.name.localeCompare(b.name))
+      };
+    });
+
+    // ===== QUIZ =====
+    const catList = Object.keys(catMap).sort((a, b) => catMap[b].length - catMap[a].length);
+    const quizScopes = [{ id: 'all', label: 'All reactions' }].concat(
+      catList.map((c) => ({ id: c, label: this.catLabel(c) }))
+    ).map((s) => ({
+      label: s.label,
+      onSel: () => this.setQuizScope(s.id),
+      style: this.quizScopeStyle(this.state.quizScope === s.id)
+    }));
+    const qq = this.state.quizQ;
+    const picked = this.state.quizPicked;
+    const answered = picked != null;
+    const isCorrect = answered && qq && picked === qq.answer;
+    const quizOptions = (qq && qq.options ? qq.options : []).map((opt) => ({
+      label: opt,
+      mark: this.quizOptMark(opt),
+      onPick: () => this.answerQuiz(opt),
+      style: this.quizOptStyle(opt)
+    }));
+    const TOTAL = 10;
+    const isLast = this.state.quizIdx + 1 >= TOTAL;
+    const finalScore = this.state.quizScore;
+    let resultTitle = '', resultMsg = '', resultTag = 'Round complete';
+    if (finalScore >= 9) { resultTitle = 'Outstanding!'; resultMsg = 'Near-perfect recall. You clearly know your named reactions.'; }
+    else if (finalScore >= 7) { resultTitle = 'Strong work'; resultMsg = 'A solid grasp of the material — a few more rounds and you\'ll master it.'; }
+    else if (finalScore >= 5) { resultTitle = 'Good effort'; resultMsg = 'You\'re getting there. Review the ones you missed and try again.'; }
+    else { resultTitle = 'Keep studying'; resultMsg = 'Plenty of room to grow — explore the reactions, then come back for another round.'; }
+    const resultRingHue = finalScore >= 7 ? 150 : (finalScore >= 5 ? 55 : 25);
+
     return {
       loaded: this.state.loaded,
       total: this.data.length,
       showDirectory: tab === 'directory',
       showFavorites: tab === 'favorites',
+      showExplore: tab === 'explore',
+      showQuiz: tab === 'quiz',
       groups,
       alphabet,
       scrollRef: this.scrollRef,
@@ -446,9 +950,67 @@ class Component extends DCLogic {
 
       goDirectory: () => this.setState({ tab: 'directory', detailId: null }),
       goFavorites: () => this.setState({ tab: 'favorites', detailId: null }),
+      goExplore: () => this.setState({ tab: 'explore', detailId: null }),
+      goQuiz: () => this.setState({ tab: 'quiz', detailId: null }),
       dirTabColor: tab === 'directory' ? activeAccent : inactive,
       favTabColor: tab === 'favorites' ? activeAccent : inactive,
+      expTabColor: tab === 'explore' ? activeAccent : inactive,
+      quizTabColor: tab === 'quiz' ? activeAccent : inactive,
       favTabIcon: tab === 'favorites' ? '★' : '☆',
+
+      // explore: segmented control
+      showTimeline: this.state.exploreView === 'timeline',
+      showCategory: this.state.exploreView === 'category',
+      showGroups: this.state.exploreView === 'groups',
+      segTimeline: { onSel: () => this.setExploreView('timeline'), style: this.segStyle(this.state.exploreView === 'timeline') },
+      segCategory: { onSel: () => this.setExploreView('category'), style: this.segStyle(this.state.exploreView === 'category') },
+      segGroups: { onSel: () => this.setExploreView('groups'), style: this.segStyle(this.state.exploreView === 'groups') },
+
+      // explore: timeline
+      eras,
+      yearMin: yr.length ? Math.min.apply(null, yr) : '',
+      yearMax: yr.length ? Math.max.apply(null, yr) : '',
+
+      // explore: category
+      catGroups,
+
+      // explore: functional groups
+      fgList,
+      dirFrom: { onSel: () => this.setFgDir('from'), style: this.dirStyle(dir === 'from') },
+      dirTo: { onSel: () => this.setFgDir('to'), style: this.dirStyle(dir === 'to') },
+      fgHint: dir === 'from'
+        ? 'Pick the functional group you start with to see every reaction that transforms it — and what it becomes.'
+        : 'Pick the functional group you want to make to see every route to it — and what you start from.',
+
+      // ===== QUIZ =====
+      quizStart: !this.state.quizActive,
+      quizPlaying: this.state.quizActive && !this.state.quizDone,
+      quizResults: this.state.quizActive && this.state.quizDone,
+      quizScopes,
+      quizBestLabel: this.state.quizBest > 0 ? this.state.quizBest + ' / 10' : 'Not set yet',
+      onStartQuiz: () => this.startQuiz(),
+      onExitQuiz: () => this.exitQuiz(),
+      onNextQuiz: () => this.nextQuiz(),
+      onReviewAnswer: () => this.reviewAnswer(),
+      quizProgressLabel: 'Question ' + (this.state.quizIdx + 1) + ' of ' + TOTAL,
+      quizProgressPct: Math.round(((this.state.quizIdx + (answered ? 1 : 0)) / TOTAL) * 100) + '%',
+      quizStreak: this.state.quizStreak,
+      quizQTag: qq ? qq.tag : '',
+      quizPrompt: qq ? qq.prompt : '',
+      quizOptions,
+      quizAnswered: answered,
+      quizExplain: qq ? qq.explain : '',
+      quizFbTitle: isCorrect ? '✓ Correct' : '✗ Not quite',
+      quizFbBg: isCorrect ? 'oklch(0.96 0.04 150)' : 'oklch(0.96 0.04 25)',
+      quizFbBorder: isCorrect ? 'oklch(0.8 0.08 150)' : 'oklch(0.82 0.09 25)',
+      quizFbColor: isCorrect ? 'oklch(0.4 0.1 150)' : 'oklch(0.45 0.13 25)',
+      quizNextLabel: isLast ? 'See results' : 'Next question',
+      quizScore: finalScore,
+      quizResultTag: resultTag,
+      quizResultTitle: resultTitle,
+      quizResultMsg: resultMsg,
+      quizResultRing: `oklch(0.5 0.13 ${resultRingHue})`,
+      quizNewBest: this.state.quizDone && finalScore >= this.state.quizBest && finalScore > 0,
 
       showZoom: !!this.state.zoom,
       zoomImgUrl: this.state.zoom ? this.state.zoom.src : '',
