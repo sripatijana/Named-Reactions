@@ -29,6 +29,7 @@
 <script src="nr-data.js"></script>
 <script src="nr-fg.js"></script>
 <script src="nr-data-ext.js"></script>
+<script src="nr-abbrev.js"></script>
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -41,10 +42,12 @@
   }
   .nr-scroll::-webkit-scrollbar { width: 0; height: 0; }
   .nr-scroll { scrollbar-width: none; }
+  a { color: oklch(0.47 0.11 25); }
+  a:hover { color: oklch(0.38 0.13 25); }
 </style>
 </helmet>
 
-<div style="position:fixed;inset:0;background:#f5f2ea;display:flex;flex-direction:column;overflow:hidden;">
+<div style="{{ rootStyle }}">
 
       <!-- Safe-area top (OS status bar sits here on iPhone) -->
       <div style="height:max(env(safe-area-inset-top),14px);flex:none;"></div>
@@ -53,13 +56,45 @@
       <sc-if value="{{ showDirectory }}" hint-placeholder-val="{{ true }}">
       <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
         <div style="flex:none;padding:6px 22px 14px;">
-          <div style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:oklch(0.47 0.11 25);margin-bottom:8px;">Organic Chemistry</div>
-          <div style="font-family:'Spectral',serif;font-weight:600;font-size:30px;line-height:1.02;color:#211d18;letter-spacing:-0.01em;">Named Reactions</div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+            <div style="min-width:0;">
+              <div style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:oklch(0.47 0.11 25);margin-bottom:8px;">Organic Chemistry</div>
+              <div style="font-family:'Spectral',serif;font-weight:600;font-size:30px;line-height:1.02;color:#211d18;letter-spacing:-0.01em;">Named Reactions</div>
+            </div>
+            <div style="flex:none;display:flex;gap:9px;margin-top:2px;">
+              <div onclick="{{ onToggleDark }}" style="width:48px;height:48px;border-radius:14px;background:#fff;border:1px solid rgba(33,29,24,.12);display:flex;align-items:center;justify-content:center;font-size:19px;color:oklch(0.47 0.11 25);cursor:pointer;" style-active="background:rgba(33,29,24,.04);">{{ darkIcon }}</div>
+              <div onclick="{{ onOpenSearch }}" style="width:48px;height:48px;border-radius:14px;background:#fff;border:1px solid rgba(33,29,24,.12);display:flex;align-items:center;justify-content:center;font-size:19px;color:oklch(0.47 0.11 25);cursor:pointer;" style-active="background:rgba(33,29,24,.04);">⌕</div>
+              <div onclick="{{ onOpenMenu }}" style="width:48px;height:48px;border-radius:14px;background:#fff;border:1px solid rgba(33,29,24,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3.5px;cursor:pointer;" style-active="background:rgba(33,29,24,.04);">
+                <div style="width:19px;height:2px;background:oklch(0.47 0.11 25);border-radius:1px;"></div>
+                <div style="width:19px;height:2px;background:oklch(0.47 0.11 25);border-radius:1px;"></div>
+                <div style="width:19px;height:2px;background:oklch(0.47 0.11 25);border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
           <div style="margin-top:7px;font:400 12.5px/1.4 'IBM Plex Mono',monospace;color:#8a8378;">{{ total }} reactions · sorted A–Z</div>
         </div>
 
         <div style="position:relative;flex:1;min-height:0;">
           <div class="nr-scroll" ref="{{ scrollRef }}" style="position:relative;height:100%;overflow-y:auto;padding-bottom:24px;">
+
+            <!-- streak + reaction of the day -->
+            <div style="padding:0 22px 16px;display:flex;flex-direction:column;gap:10px;">
+              <sc-if value="{{ hasStreak }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:oklch(0.96 0.03 55);border:1px solid oklch(0.85 0.06 55);">
+                  <div style="font-size:16px;">🔥</div>
+                  <div style="font:600 13px/1 -apple-system,system-ui;color:oklch(0.45 0.11 55);">{{ streakLabel }}</div>
+                </div>
+              </sc-if>
+              <div onclick="{{ rod.onOpen }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;background:#fff;border:1px solid rgba(33,29,24,.12);cursor:pointer;" style-active="background:rgba(33,29,24,.03);">
+                <span style="flex:none;width:9px;height:9px;border-radius:2px;background:{{ rod.catColor }};"></span>
+                <div style="flex:1;min-width:0;">
+                  <div style="font:600 10px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#a49d90;">Reaction of the Day</div>
+                  <div style="margin-top:3px;font-family:'Spectral',serif;font-weight:600;font-size:15.5px;color:#211d18;">{{ rod.name }}</div>
+                </div>
+                <div onclick="{{ onSurprise }}" style="flex:none;font-size:20px;cursor:pointer;padding:6px;" title="Surprise me">🎲</div>
+              </div>
+            </div>
+
             <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
               <div id="{{ g.id }}" style="position:relative;">
                 <div style="position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:10px;padding:6px 22px;background:linear-gradient(#f5f2ea 70%,rgba(245,242,234,0));backdrop-filter:blur(2px);">
@@ -142,6 +177,8 @@
             <div onclick="{{ segTimeline.onSel }}" style="{{ segTimeline.style }}">Timeline</div>
             <div onclick="{{ segCategory.onSel }}" style="{{ segCategory.style }}">Category</div>
             <div onclick="{{ segGroups.onSel }}" style="{{ segGroups.style }}">Groups</div>
+            <div onclick="{{ segAbbrev.onSel }}" style="{{ segAbbrev.style }}">Abbrev.</div>
+            <div onclick="{{ segMap.onSel }}" style="{{ segMap.style }}">Map</div>
           </div>
         </div>
 
@@ -219,6 +256,88 @@
             </sc-for>
           </sc-if>
 
+          <!-- ABBREVIATIONS -->
+          <sc-if value="{{ showAbbrev }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 16px 12px;">
+              <div style="display:flex;align-items:center;gap:9px;background:#fff;border:1px solid rgba(33,29,24,.14);border-radius:11px;padding:11px 14px;">
+                <span style="font-size:14px;color:#a49d90;">⌕</span>
+                <input value="{{ abbrevQuery }}" onInput="{{ onAbbrevSearch }}" placeholder="Search abbreviations…" style="flex:1;border:none;outline:none;background:transparent;font:400 14px/1.2 -apple-system,system-ui;color:#211d18;">
+                <sc-if value="{{ abbrevHasQuery }}" hint-placeholder-val="{{ false }}">
+                  <span onclick="{{ onAbbrevClear }}" style="font-size:15px;color:#a49d90;cursor:pointer;padding:0 2px;">✕</span>
+                </sc-if>
+              </div>
+              <div style="margin-top:9px;padding:0 4px;font:400 12px/1.5 -apple-system,system-ui;color:#8a8378;">{{ abbrevCountLabel }}</div>
+            </div>
+
+            <sc-if value="{{ abbrevEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:50px 40px;text-align:center;font:400 13px/1.5 -apple-system,system-ui;color:#8a8378;">No abbreviations match “{{ abbrevQuery }}”.</div>
+            </sc-if>
+
+            <sc-for list="{{ abbrevGroups }}" as="grp" hint-placeholder-count="6">
+              <div style="position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:10px;padding:11px 22px 7px;background:linear-gradient(#f5f2ea 72%,rgba(245,242,234,0));backdrop-filter:blur(2px);">
+                <div style="font-family:'Spectral',serif;font-weight:600;font-size:16px;color:#211d18;">{{ grp.group }}</div>
+                <div style="font:500 10.5px/1 'IBM Plex Mono',monospace;color:#a49d90;">{{ grp.count }}</div>
+                <div style="flex:1;height:1px;background:rgba(33,29,24,.09);"></div>
+              </div>
+              <sc-for list="{{ grp.items }}" as="ab" hint-placeholder-count="4">
+                <div style="display:flex;gap:14px;padding:11px 22px;border-bottom:1px solid rgba(33,29,24,.055);">
+                  <div style="flex:none;width:96px;font:600 12.5px/1.35 'IBM Plex Mono',monospace;color:oklch(0.47 0.11 25);word-break:break-word;">{{ ab.a }}</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-family:'Spectral',serif;font-weight:600;font-size:14.5px;line-height:1.25;color:#211d18;">{{ ab.full }}</div>
+                    <div style="margin-top:2px;font:400 12px/1.4 -apple-system,system-ui;color:#7c766b;">{{ ab.note }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </sc-for>
+          </sc-if>
+
+          <!-- RELATED-REACTIONS MAP -->
+          <sc-if value="{{ showMap }}" hint-placeholder-val="{{ false }}">
+
+            <!-- HUB PICKER -->
+            <sc-if value="{{ mapPicking }}" hint-placeholder-val="{{ true }}">
+              <div style="padding:0 22px 12px;font:400 12px/1.5 -apple-system,system-ui;color:#8a8378;">Pick a well-connected reaction to see its web of related reactions. Tap any node to re-center the map on it.</div>
+              <sc-for list="{{ mapHubs }}" as="h" hint-placeholder-count="6">
+                <div onclick="{{ h.onFocus }}" style="display:flex;align-items:center;gap:12px;padding:11px 22px;cursor:pointer;border-bottom:1px solid rgba(33,29,24,.055);" style-active="background:rgba(33,29,24,.03);">
+                  <span style="flex:none;width:9px;height:9px;border-radius:2px;background:{{ h.catColor }};"></span>
+                  <div style="flex:1;min-width:0;font-family:'Spectral',serif;font-weight:600;font-size:15px;color:#211d18;">{{ h.name }}</div>
+                  <div style="flex:none;font:500 10.5px/1 'IBM Plex Mono',monospace;color:#a49d90;">{{ h.countLabel }}</div>
+                </div>
+              </sc-for>
+            </sc-if>
+
+            <!-- FOCUSED MAP -->
+            <sc-if value="{{ mapFocused }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:12px;padding:0 22px 4px;">
+                <sc-if value="{{ mapHasHistory }}" hint-placeholder-val="{{ false }}">
+                  <div onclick="{{ onMapBack }}" style="font:500 13px/1 -apple-system,system-ui;color:oklch(0.47 0.11 25);cursor:pointer;">‹ Back</div>
+                </sc-if>
+                <div style="flex:1;"></div>
+                <div onclick="{{ onMapReset }}" style="font:500 13px/1 -apple-system,system-ui;color:#8a8378;cursor:pointer;">Choose another</div>
+              </div>
+
+              <div style="position:relative;height:340px;margin:6px 0 4px;">
+                <sc-for list="{{ mapLines }}" as="ln" hint-placeholder-count="6">
+                  <div style="position:absolute;left:50%;top:50%;width:{{ ln.len }}px;height:2px;background:rgba(33,29,24,.16);transform-origin:0 50%;transform:rotate({{ ln.angle }}deg);"></div>
+                </sc-for>
+
+                <div onclick="{{ mapCenter.onOpen }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:120px;text-align:center;cursor:pointer;z-index:2;">
+                  <div style="padding:12px 10px;border-radius:14px;background:{{ mapCenter.color }};color:#fff;font-family:'Spectral',serif;font-weight:600;font-size:13.5px;line-height:1.2;box-shadow:0 6px 16px -6px rgba(0,0,0,.35);">{{ mapCenter.name }}</div>
+                </div>
+
+                <sc-for list="{{ mapNodes }}" as="nd" hint-placeholder-count="6">
+                  <div onclick="{{ nd.onFocus }}" style="position:absolute;left:{{ nd.left }};top:{{ nd.top }};transform:translate(-50%,-50%);width:98px;text-align:center;cursor:pointer;z-index:1;">
+                    <div style="padding:9px 8px;border-radius:12px;background:#fff;border:1.5px solid {{ nd.borderColor }};font-family:'Spectral',serif;font-weight:500;font-size:12px;line-height:1.2;color:#211d18;">{{ nd.name }}</div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="padding:6px 22px 4px;font:400 12.5px/1.5 -apple-system,system-ui;color:#7c766b;">{{ mapCenter.summary }}</div>
+              <div onclick="{{ mapCenter.onOpen }}" style="padding:2px 22px 8px;font:500 12.5px/1 -apple-system,system-ui;color:oklch(0.47 0.11 25);cursor:pointer;">Open {{ mapCenter.name }} ›</div>
+            </sc-if>
+
+          </sc-if>
+
         </div>
       </div>
       </sc-if>
@@ -242,7 +361,25 @@
             </div>
           </div>
 
-          <div style="margin-top:24px;font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a8378;">Quiz me on</div>
+          <sc-if value="{{ hasWeakSpots }}" hint-placeholder-val="{{ false }}">
+            <div onclick="{{ onSelectWeak }}" style="margin-top:22px;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;cursor:pointer;background:{{ weakCardBg }};border:1px solid {{ weakCardBorder }};" style-active="opacity:.92;">
+              <div style="flex:none;font-size:20px;">🔥</div>
+              <div style="flex:1;">
+                <div style="font-family:'Spectral',serif;font-weight:600;font-size:15px;color:#211d18;">Weak Spots</div>
+                <div style="margin-top:2px;font:400 11.5px/1.4 -apple-system,system-ui;color:#7c766b;">{{ weakCountLabel }} you've missed before — drill just these.</div>
+              </div>
+              <div style="flex:none;font-size:14px;color:oklch(0.47 0.11 25);">{{ weakCheck }}</div>
+            </div>
+          </sc-if>
+
+          <div style="margin-top:22px;font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a8378;">Difficulty</div>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;">
+            <sc-for list="{{ diffScopes }}" as="d" hint-placeholder-count="3">
+              <div onclick="{{ d.onSel }}" style="{{ d.style }}">{{ d.label }}</div>
+            </sc-for>
+          </div>
+
+          <div style="margin-top:20px;font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a8378;">Category</div>
           <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;">
             <sc-for list="{{ quizScopes }}" as="s" hint-placeholder-count="6">
               <div onclick="{{ s.onSel }}" style="{{ s.style }}">{{ s.label }}</div>
@@ -252,6 +389,7 @@
           <div onclick="{{ onStartQuiz }}" style="margin-top:30px;display:flex;align-items:center;justify-content:center;gap:9px;padding:17px;border-radius:14px;background:oklch(0.47 0.11 25);color:#fff;cursor:pointer;font:600 15px/1 -apple-system,system-ui;" style-active="opacity:.9;">
             Start quiz <span style="font-size:17px;margin-top:-1px;">›</span>
           </div>
+          <div onclick="{{ onOpenCheatSheet }}" style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;border-radius:14px;background:#fff;border:1px solid rgba(33,29,24,.14);color:#211d18;cursor:pointer;font:600 13.5px/1 -apple-system,system-ui;" style-active="background:rgba(33,29,24,.03);">🖨 Print cheat sheet</div>
         </div>
         </sc-if>
 
@@ -329,34 +467,39 @@
       </div>
       </sc-if>
 
-      <!-- ============ BOTTOM TAB BAR ============ -->
-      <div style="flex:none;height:78px;display:flex;border-top:1px solid rgba(33,29,24,.09);background:rgba(245,242,234,.94);backdrop-filter:blur(10px);padding-bottom:max(env(safe-area-inset-bottom),14px);">
-        <div onclick="{{ goDirectory }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ dirTabColor }};">
-          <div style="display:flex;flex-direction:column;gap:2.5px;width:17px;">
-            <div style="height:2px;background:currentColor;border-radius:1px;"></div>
-            <div style="height:2px;background:currentColor;border-radius:1px;"></div>
-            <div style="height:2px;background:currentColor;border-radius:1px;"></div>
+      <!-- ============ SIDE MENU DRAWER ============ -->
+      <sc-if value="{{ showMenu }}" hint-placeholder-val="{{ false }}">
+      <div onclick="{{ onCloseMenu }}" style="position:absolute;inset:0;z-index:70;background:rgba(20,17,14,.4);">
+        <div onclick="{{ stopProp }}" style="position:absolute;top:0;right:0;bottom:0;width:82%;max-width:320px;background:#f5f2ea;box-shadow:-8px 0 24px -8px rgba(0,0,0,.3);display:flex;flex-direction:column;">
+          <div style="flex:none;height:max(env(safe-area-inset-top),14px);"></div>
+          <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:10px 18px 14px;">
+            <div style="font-family:'Spectral',serif;font-weight:600;font-size:19px;color:#211d18;">Menu</div>
+            <div onclick="{{ onCloseMenu }}" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#8a8378;cursor:pointer;">✕</div>
           </div>
-          <div style="font:600 10px/1 -apple-system,system-ui;letter-spacing:.02em;">Directory</div>
-        </div>
-        <div onclick="{{ goExplore }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ expTabColor }};">
-          <div style="width:17px;height:17px;border:2px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;">
-            <div style="width:2px;height:8px;background:currentColor;transform:rotate(45deg);transform-origin:center;border-radius:1px;"></div>
+          <div class="nr-scroll" style="flex:1;min-height:0;overflow-y:auto;padding-bottom:20px;">
+
+            <div onclick="{{ menu.directory }}" style="{{ menuItemStyle.directory }}"><span style="width:20px;text-align:center;">☰</span>Directory</div>
+
+            <div style="padding:16px 20px 6px;font:600 10px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#a49d90;">Explore</div>
+            <div onclick="{{ menu.timeline }}" style="{{ menuItemStyle.timeline }}"><span style="width:20px;text-align:center;">◷</span>Timeline</div>
+            <div onclick="{{ menu.category }}" style="{{ menuItemStyle.category }}"><span style="width:20px;text-align:center;">▤</span>Category</div>
+            <div onclick="{{ menu.groups }}" style="{{ menuItemStyle.groups }}"><span style="width:20px;text-align:center;">⇄</span>Functional Groups</div>
+            <div onclick="{{ menu.abbrev }}" style="{{ menuItemStyle.abbrev }}"><span style="width:20px;text-align:center;">Ab</span>Abbreviations</div>
+            <div onclick="{{ menu.map }}" style="{{ menuItemStyle.map }}"><span style="width:20px;text-align:center;">✺</span>Related Map</div>
+
+            <div style="padding:16px 20px 6px;font:600 10px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#a49d90;">Study</div>
+            <div onclick="{{ menu.quiz }}" style="{{ menuItemStyle.quiz }}"><span style="width:20px;text-align:center;">?</span>Quiz</div>
+            <div onclick="{{ menu.favorites }}" style="{{ menuItemStyle.favorites }}"><span style="width:20px;text-align:center;">★</span>Favorites</div>
+            <div onclick="{{ onOpenCheatSheet }}" style="{{ menuItemStyle.plain }}"><span style="width:20px;text-align:center;">🖨</span>Print Cheat Sheet</div>
+
           </div>
-          <div style="font:600 10px/1 -apple-system,system-ui;letter-spacing:.02em;">Explore</div>
-        </div>
-        <div onclick="{{ goQuiz }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ quizTabColor }};">
-          <div style="width:17px;height:17px;position:relative;display:flex;align-items:center;justify-content:center;">
-            <div style="width:13px;height:13px;border:2px solid currentColor;border-radius:50%;"></div>
-            <div style="position:absolute;font:700 9px/1 'IBM Plex Mono',monospace;color:currentColor;">?</div>
+          <div style="flex:none;padding:14px 20px max(env(safe-area-inset-bottom),16px);border-top:1px solid rgba(33,29,24,.08);">
+            <div style="font:400 11.5px/1.5 -apple-system,system-ui;color:#a49d90;">Created by</div>
+            <a href="{{ creatorUrl }}" target="_blank" rel="noopener" style="display:block;margin-top:2px;font-family:'Spectral',serif;font-weight:600;font-size:14.5px;color:oklch(0.47 0.11 25);text-decoration:none;">{{ creatorName }}</a>
           </div>
-          <div style="font:600 10px/1 -apple-system,system-ui;letter-spacing:.02em;">Quiz</div>
-        </div>
-        <div onclick="{{ goFavorites }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ favTabColor }};">
-          <div style="font-size:16px;line-height:1;">{{ favTabIcon }}</div>
-          <div style="font:600 10px/1 -apple-system,system-ui;letter-spacing:.02em;">Favorites</div>
         </div>
       </div>
+      </sc-if>
 
       <!-- ============ DETAIL OVERLAY ============ -->
       <sc-if value="{{ showDetail }}" hint-placeholder-val="{{ false }}">
@@ -380,8 +523,9 @@
           <!-- reaction scheme + mechanism (single image) -->
           <div style="margin-top:18px;">
             <sc-if value="{{ detail.hasScheme }}" hint-placeholder-val="{{ false }}">
+              <sc-if value="{{ detailSchemeUrl }}" hint-placeholder-val="{{ false }}">
               <div onclick="{{ detail.onExpand }}" style="position:relative;width:100%;border-radius:12px;overflow:hidden;border:1px solid rgba(33,29,24,.12);background:#fff;cursor:zoom-in;display:flex;align-items:center;justify-content:center;" style-active="opacity:.92;">
-                <img src="{{ detailSchemeUrl }}" alt="reaction scheme" style="display:block;width:100%;height:auto;background:#fff;">
+                <img src="{{ detailSchemeUrl }}" alt="reaction scheme" style="{{ imgCounterFilter }}display:block;width:100%;height:auto;background:#fff;">
                 <div style="position:absolute;bottom:8px;left:8px;display:flex;align-items:center;gap:5px;background:rgba(33,29,24,.72);color:#f5f2ea;font:500 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.04em;padding:5px 8px;border-radius:6px;">⤢ TAP TO ENLARGE</div>
               </div>
             </sc-if>
@@ -411,15 +555,42 @@
           <div style="margin-top:26px;display:flex;align-items:center;gap:10px;">
             <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a8378;">Mechanism</div>
             <div style="flex:1;height:1px;background:rgba(33,29,24,.1);"></div>
+            <sc-if value="{{ detail.hasSteps }}" hint-placeholder-val="{{ false }}">
+              <div onclick="{{ detail.onToggleStepMode }}" style="flex:none;font:600 11px/1 -apple-system,system-ui;color:oklch(0.47 0.11 25);cursor:pointer;padding:4px 2px;white-space:nowrap;">{{ detail.stepModeLabel }}</div>
+            </sc-if>
           </div>
-          <div style="margin-top:14px;display:flex;flex-direction:column;gap:0;">
-            <sc-for list="{{ detail.steps }}" as="s" hint-placeholder-count="3">
-              <div style="display:flex;gap:14px;padding-bottom:16px;position:relative;">
-                <div style="flex:none;width:26px;height:26px;border-radius:50%;background:oklch(0.47 0.11 25);color:#fff;font:600 12px/1 'IBM Plex Mono',monospace;display:flex;align-items:center;justify-content:center;z-index:2;">{{ s.n }}</div>
-                <div style="flex:1;font-family:'Spectral',serif;font-weight:400;font-size:14.5px;line-height:1.5;color:#33302a;padding-top:3px;">{{ s.text }}</div>
+
+          <sc-if value="{{ detail.stepListMode }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:14px;display:flex;flex-direction:column;gap:0;">
+              <sc-for list="{{ detail.steps }}" as="s" hint-placeholder-count="3">
+                <div style="display:flex;gap:14px;padding-bottom:16px;position:relative;">
+                  <div style="flex:none;width:26px;height:26px;border-radius:50%;background:oklch(0.47 0.11 25);color:#fff;font:600 12px/1 'IBM Plex Mono',monospace;display:flex;align-items:center;justify-content:center;z-index:2;">{{ s.n }}</div>
+                  <div style="flex:1;font-family:'Spectral',serif;font-weight:400;font-size:14.5px;line-height:1.5;color:#33302a;padding-top:3px;">{{ s.text }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ detail.stepMode }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:14px;">
+              <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:14px;">
+                <sc-for list="{{ detail.stepDots }}" as="dot" hint-placeholder-count="3">
+                  <div onclick="{{ dot.onGo }}" style="width:{{ dot.size }};height:7px;border-radius:4px;cursor:pointer;background:{{ dot.color }};transition:background .15s,width .15s;"></div>
+                </sc-for>
               </div>
-            </sc-for>
-          </div>
+              <div style="min-height:140px;padding:20px 20px 22px;background:#fff;border:1px solid rgba(33,29,24,.12);border-radius:16px;display:flex;flex-direction:column;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="flex:none;width:30px;height:30px;border-radius:50%;background:oklch(0.47 0.11 25);color:#fff;font:600 13px/1 'IBM Plex Mono',monospace;display:flex;align-items:center;justify-content:center;">{{ detail.stepIdxLabel }}</div>
+                  <div style="font:500 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#a49d90;">{{ detail.stepLabel }}</div>
+                </div>
+                <div style="flex:1;margin-top:16px;font-family:'Spectral',serif;font-weight:500;font-size:17px;line-height:1.5;color:#211d18;">{{ detail.curStepText }}</div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:12px;">
+                <div onclick="{{ detail.onStepPrev }}" style="{{ detail.stepPrevStyle }}">‹ Prev</div>
+                <div onclick="{{ detail.onStepNext }}" style="{{ detail.stepNextStyle }}">{{ detail.stepNextLabel }}</div>
+              </div>
+            </div>
+          </sc-if>
 
           <!-- example -->
           <div style="margin-top:6px;display:flex;align-items:center;gap:10px;">
@@ -460,6 +631,55 @@
       </div>
       </sc-if>
 
+      <!-- ============ GLOBAL SEARCH OVERLAY ============ -->
+      <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;z-index:50;background:#f5f2ea;display:flex;flex-direction:column;">
+        <div style="flex:none;height:max(env(safe-area-inset-top),14px);"></div>
+        <div style="flex:none;padding:10px 16px 14px;display:flex;align-items:center;gap:10px;">
+          <div style="flex:1;display:flex;align-items:center;gap:11px;background:#fff;border:1.5px solid rgba(33,29,24,.16);border-radius:16px;padding:16px 18px;">
+            <span style="font-size:19px;color:#a49d90;">⌕</span>
+            <input ref="{{ searchInputRef }}" value="{{ searchQuery }}" onInput="{{ onSearchInput }}" placeholder="Search reactions & abbreviations…" style="flex:1;border:none;outline:none;background:transparent;font:400 18px/1.3 -apple-system,system-ui;color:#211d18;">
+          </div>
+          <div onclick="{{ onCloseSearch }}" style="flex:none;font:500 15px/1 -apple-system,system-ui;color:oklch(0.47 0.11 25);cursor:pointer;padding:8px 2px;">Cancel</div>
+        </div>
+
+        <div class="nr-scroll" style="flex:1;min-height:0;overflow-y:auto;padding-bottom:24px;">
+          <sc-if value="{{ searchEmpty }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:60px 40px;text-align:center;font:400 13px/1.5 -apple-system,system-ui;color:#8a8378;">Start typing to search across all {{ total }} reactions and 445 abbreviations.</div>
+          </sc-if>
+          <sc-if value="{{ searchNoResults }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:60px 40px;text-align:center;font:400 13px/1.5 -apple-system,system-ui;color:#8a8378;">No matches for “{{ searchQuery }}”.</div>
+          </sc-if>
+
+          <sc-if value="{{ searchHasReactions }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:14px 22px 6px;font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a8378;">Reactions</div>
+            <sc-for list="{{ searchReactionResults }}" as="item" hint-placeholder-count="3">
+              <div onclick="{{ item.onOpen }}" style="display:flex;align-items:center;gap:6px;padding:11px 16px 11px 22px;cursor:pointer;border-bottom:1px solid rgba(33,29,24,.055);" style-active="background:rgba(33,29,24,.03);">
+                <div style="flex:1;min-width:0;">
+                  <div style="font-family:'Spectral',serif;font-weight:600;font-size:15.5px;line-height:1.15;color:#211d18;">{{ item.name }}</div>
+                  <div style="margin-top:3px;font:400 12px/1.35 -apple-system,system-ui;color:#7c766b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ item.summary }}</div>
+                </div>
+                <span style="flex:none;font:500 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;padding:3px 6px;border-radius:4px;background:{{ item.catBg }};color:{{ item.catColor }};">{{ item.catLabel }}</span>
+              </div>
+            </sc-for>
+          </sc-if>
+
+          <sc-if value="{{ searchHasAbbrev }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:16px 22px 6px;font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a8378;">Abbreviations</div>
+            <sc-for list="{{ searchAbbrevResults }}" as="ab" hint-placeholder-count="3">
+              <div onclick="{{ ab.onOpen }}" style="display:flex;gap:14px;padding:11px 22px;cursor:pointer;border-bottom:1px solid rgba(33,29,24,.055);" style-active="background:rgba(33,29,24,.03);">
+                <div style="flex:none;width:88px;font:600 12.5px/1.35 'IBM Plex Mono',monospace;color:oklch(0.47 0.11 25);word-break:break-word;">{{ ab.a }}</div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-family:'Spectral',serif;font-weight:600;font-size:14.5px;line-height:1.25;color:#211d18;">{{ ab.full }}</div>
+                  <div style="margin-top:2px;font:400 12px/1.4 -apple-system,system-ui;color:#7c766b;">{{ ab.note }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </sc-if>
+        </div>
+      </div>
+      </sc-if>
+
       <!-- ============ FULL-SCREEN SCHEME VIEWER ============ -->
       <sc-if value="{{ showZoom }}" hint-placeholder-val="{{ false }}">
       <div style="position:absolute;inset:0;z-index:60;background:#100e0c;display:flex;flex-direction:column;">
@@ -468,9 +688,11 @@
           <div style="min-width:0;font-family:'Spectral',serif;font-weight:600;font-size:15.5px;color:#f5f2ea;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ zoom.name }}</div>
           <div onclick="{{ zoom.onClose }}" style="flex:none;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#f5f2ea;cursor:pointer;">✕</div>
         </div>
+        <sc-if value="{{ zoomImgUrl }}" hint-placeholder-val="{{ false }}">
         <div onclick="{{ zoom.onToggle }}" style="flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:{{ zoom.align }};justify-content:center;padding:10px;cursor:{{ zoom.cursor }};">
-          <img src="{{ zoomImgUrl }}" alt="reaction mechanism" style="{{ zoomImgStyle }}">
+          <img src="{{ zoomImgUrl }}" alt="reaction mechanism" style="{{ imgCounterFilter }}{{ zoomImgStyle }}">
         </div>
+        </sc-if>
         <div style="flex:none;text-align:center;padding:9px 16px max(env(safe-area-inset-bottom),12px);font:500 10px/1.4 'IBM Plex Mono',monospace;letter-spacing:.03em;color:rgba(245,242,234,.55);">{{ zoom.hint }}</div>
       </div>
       </sc-if>
@@ -479,8 +701,9 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { loaded: false, tab: 'directory', exploreView: 'timeline', fgDir: 'from', fgOpen: {}, detailId: null, favorites: {}, brokenSchemes: {}, zoom: null, zoomFit: 'fit', mechAvail: {},
-    quizScope: 'all', quizActive: false, quizQ: null, quizIdx: 0, quizScore: 0, quizStreak: 0, quizPicked: null, quizDone: false, quizBest: 0, quizRoundLog: [] };
+  state = { loaded: false, tab: 'directory', exploreView: 'timeline', fgDir: 'from', fgOpen: {}, abbrevQuery: '', detailId: null, favorites: {}, brokenSchemes: {}, zoom: null, zoomFit: 'fit', mechAvail: {},
+    quizScope: 'all', quizActive: false, quizQ: null, quizIdx: 0, quizScore: 0, quizStreak: 0, quizPicked: null, quizDone: false, quizBest: 0, quizRoundLog: [], weakMap: {},
+    showSearch: false, searchQuery: '', mapFocusId: null, mapHistory: [], mechStepMode: false, mechStepIdx: 0, darkMode: false, streak: 0, showMenu: false };
 
   constructor(props) {
     super(props);
@@ -502,6 +725,27 @@ class Component extends DCLogic {
     try {
       const best = parseInt(localStorage.getItem('nr-quiz-best') || '0', 10);
       if (!isNaN(best) && best > 0) this.setState({ quizBest: best });
+    } catch (e) {}
+    try {
+      const wm = JSON.parse(localStorage.getItem('nr-weak-map') || '{}');
+      if (wm && typeof wm === 'object') this.setState({ weakMap: wm });
+    } catch (e) {}
+    try {
+      const dm = localStorage.getItem('nr-dark-mode');
+      if (dm === '1') this.setState({ darkMode: true });
+    } catch (e) {}
+    try {
+      const todayStr = new Date().toDateString();
+      const lastVisit = localStorage.getItem('nr-last-visit');
+      let streak = parseInt(localStorage.getItem('nr-streak') || '0', 10) || 0;
+      if (lastVisit !== todayStr) {
+        const oneDayMs = 86400000;
+        const wasYesterday = lastVisit && (new Date(todayStr).getTime() - new Date(lastVisit).getTime()) <= oneDayMs;
+        streak = wasYesterday ? streak + 1 : 1;
+        localStorage.setItem('nr-last-visit', todayStr);
+        localStorage.setItem('nr-streak', String(streak));
+      }
+      this.setState({ streak });
     } catch (e) {}
     const load = (tries) => {
       const d = window.NR_DATA;
@@ -536,9 +780,13 @@ class Component extends DCLogic {
   catLabel(cat) { return (this.cats[cat] || cat || '').toString(); }
 
   openDetail(id) {
-    this.setState({ detailId: id });
+    this.setState({ detailId: id, mechStepMode: false, mechStepIdx: 0 });
   }
   closeDetail() { this.setState({ detailId: null }); }
+  setMechStepMode(on) { this.setState({ mechStepMode: on, mechStepIdx: 0 }); }
+  mechStepGo(delta, total) {
+    this.setState((s) => ({ mechStepIdx: Math.max(0, Math.min(total - 1, s.mechStepIdx + delta)) }));
+  }
 
   toggleFav(id) {
     this.setState((s) => {
@@ -555,7 +803,52 @@ class Component extends DCLogic {
     if (el && sc) sc.scrollTop = el.offsetTop;
   }
 
+  toggleDarkMode() {
+    this.setState((s) => {
+      const next = !s.darkMode;
+      try { localStorage.setItem('nr-dark-mode', next ? '1' : '0'); } catch (e) {}
+      return { darkMode: next };
+    });
+  }
+  openCheatSheet() {
+    try { window.open('cheat-sheet.html', '_blank'); } catch (e) {}
+  }
+  openMenu() { this.setState({ showMenu: true }); }
+  closeMenu() { this.setState({ showMenu: false }); }
+  navTo(tab, exploreView) {
+    const patch = { tab, detailId: null, showMenu: false };
+    if (exploreView) patch.exploreView = exploreView;
+    this.setState(patch);
+  }
+  surpriseMe() {
+    if (!this.data.length) return;
+    const r = this.data[Math.floor(Math.random() * this.data.length)];
+    this.openDetail(r.id);
+  }
   setExploreView(v) { this.setState({ exploreView: v }); }
+  setAbbrevQuery(v) { this.setState({ abbrevQuery: v }); }
+  openSearch() { this.setState({ showSearch: true, searchQuery: '' }); }
+  closeSearch() { this.setState({ showSearch: false }); }
+  setSearchQuery(v) { this.setState({ searchQuery: v }); }
+  goToAbbrev(term) {
+    this.setState({ showSearch: false, tab: 'explore', exploreView: 'abbrev', abbrevQuery: term });
+  }
+  mapFocus(id) {
+    this.setState((s) => {
+      if (s.mapFocusId === id) return null;
+      const hist = s.mapFocusId ? s.mapHistory.concat([s.mapFocusId]) : s.mapHistory;
+      return { mapFocusId: id, mapHistory: hist };
+    });
+  }
+  mapBack() {
+    this.setState((s) => {
+      if (!s.mapHistory.length) return { mapFocusId: null };
+      const hist = s.mapHistory.slice();
+      const prev = hist.pop();
+      return { mapFocusId: prev, mapHistory: hist };
+    });
+  }
+  mapReset() { this.setState({ mapFocusId: null, mapHistory: [] }); }
   setFgDir(d) { this.setState({ fgDir: d, fgOpen: {} }); }
   toggleFg(name) {
     this.setState((s) => {
@@ -580,9 +873,27 @@ class Component extends DCLogic {
   }
 
   // ===================== QUIZ =====================
+  // Heuristic difficulty from mechanism depth + condition count — no manual
+  // curation needed, and it stays consistent as reactions are added.
+  difficultyOf(r) {
+    const steps = (r.mechanism || []).length;
+    const conds = (r.conditions || []).length;
+    const score = steps + conds * 0.5;
+    if (score <= 3) return 'easy';
+    if (score <= 5) return 'medium';
+    return 'hard';
+  }
   quizPool() {
     const scope = this.state.quizScope;
     if (scope === 'all' || !scope) return this.data.slice();
+    if (scope === 'weak') {
+      const wm = this.state.weakMap || {};
+      const ids = Object.keys(wm).filter((id) => wm[id] > 0);
+      return this.data.filter((r) => ids.indexOf(r.id) !== -1);
+    }
+    if (scope === 'easy' || scope === 'medium' || scope === 'hard') {
+      return this.data.filter((r) => this.difficultyOf(r) === scope);
+    }
     return this.data.filter((r) => r.category === scope);
   }
   shuffle(arr) {
@@ -678,7 +989,17 @@ class Component extends DCLogic {
       const streak = correct ? s.quizStreak + 1 : 0;
       const score = correct ? s.quizScore + 1 : s.quizScore;
       const log = s.quizRoundLog.concat([{ correct }]);
-      return { quizPicked: opt, quizScore: score, quizStreak: streak, quizRoundLog: log };
+      const wm = Object.assign({}, s.weakMap);
+      const rid = q.rid;
+      if (rid) {
+        if (correct) {
+          if (wm[rid]) { wm[rid] = wm[rid] - 1; if (wm[rid] <= 0) delete wm[rid]; }
+        } else {
+          wm[rid] = (wm[rid] || 0) + 1;
+        }
+        try { localStorage.setItem('nr-weak-map', JSON.stringify(wm)); } catch (e) {}
+      }
+      return { quizPicked: opt, quizScore: score, quizStreak: streak, quizRoundLog: log, weakMap: wm };
     });
   }
   nextQuiz() {
@@ -805,10 +1126,42 @@ class Component extends DCLogic {
           }));
         const schemeUrl = this.schemeSrc(r.id);
         const schemeBroken = !this.hasSchemeFile(r.id) || !!this.state.brokenSchemes[schemeUrl];
+        const stepMode = this.state.mechStepMode;
+        const stepTotal = steps.length;
+        const stepIdx = Math.max(0, Math.min(stepTotal - 1, this.state.mechStepIdx));
+        const curStep = steps[stepIdx];
+        const stepDots = steps.map((s, i) => ({
+          onGo: () => this.setState({ mechStepIdx: i }),
+          size: i === stepIdx ? '20px' : '7px',
+          color: i === stepIdx ? 'oklch(0.47 0.11 25)' : 'rgba(33,29,24,.16)'
+        }));
+        const navBtn = (enabled, primary) =>
+          'flex:1;text-align:center;padding:13px;border-radius:12px;font:600 13.5px/1 -apple-system,system-ui;'
+          + (enabled
+              ? (primary ? 'background:oklch(0.47 0.11 25);color:#fff;cursor:pointer;' : 'background:#fff;border:1px solid rgba(33,29,24,.14);color:#211d18;cursor:pointer;')
+              : 'background:rgba(33,29,24,.05);color:rgba(33,29,24,.28);cursor:default;');
         detail = Object.assign({}, base, {
           overview: r.overview,
           conditions: r.conditions || [],
           steps,
+          stepMode,
+          stepListMode: !stepMode,
+          hasSteps: stepTotal > 0,
+          onToggleStepMode: () => this.setMechStepMode(!stepMode),
+          stepModeLabel: stepMode ? 'Show all' : 'Step through',
+          stepTotal,
+          stepIdx,
+          stepLabel: 'Step ' + (stepIdx + 1) + ' of ' + stepTotal,
+          stepIdxLabel: stepIdx + 1,
+          curStepText: curStep ? curStep.text : '',
+          stepDots,
+          stepIsFirst: stepIdx === 0,
+          stepIsLast: stepIdx >= stepTotal - 1,
+          onStepPrev: () => this.mechStepGo(-1, stepTotal),
+          onStepNext: () => this.mechStepGo(1, stepTotal),
+          stepPrevStyle: navBtn(stepIdx > 0, false),
+          stepNextStyle: navBtn(stepIdx < stepTotal - 1, true),
+          stepNextLabel: stepIdx >= stepTotal - 1 ? 'Last step ✓' : 'Next ›',
           example: r.example,
           person: r.person,
           personYears: r.personYears,
@@ -925,9 +1278,150 @@ class Component extends DCLogic {
     else { resultTitle = 'Keep studying'; resultMsg = 'Plenty of room to grow — explore the reactions, then come back for another round.'; }
     const resultRingHue = finalScore >= 7 ? 150 : (finalScore >= 5 ? 55 : 25);
 
+    // ===== WEAK SPOTS + DIFFICULTY =====
+    const wm = this.state.weakMap || {};
+    const weakCount = Object.keys(wm).filter((id) => wm[id] > 0).length;
+    const diffDefs = [{ id: 'easy', label: 'Easy' }, { id: 'medium', label: 'Medium' }, { id: 'hard', label: 'Hard' }];
+    const diffScopes = diffDefs.map((d) => ({
+      label: d.label,
+      onSel: () => this.setQuizScope(d.id),
+      style: this.quizScopeStyle(this.state.quizScope === d.id)
+    }));
+    const weakSelected = this.state.quizScope === 'weak';
+
+    // ===== ABBREVIATIONS =====
+    const ABB = (typeof window !== 'undefined' && window.NR_ABBREV) ? window.NR_ABBREV : [];
+    const abbrevQuery = (this.state.abbrevQuery || '').trim();
+    const abq = abbrevQuery.toLowerCase();
+    const abbrevGroups = ABB.map((g) => {
+      const items = abq
+        ? g.items.filter((it) =>
+            (it.a || '').toLowerCase().includes(abq) ||
+            (it.full || '').toLowerCase().includes(abq) ||
+            (it.note || '').toLowerCase().includes(abq))
+        : g.items;
+      return { group: g.group, count: items.length, items };
+    }).filter((g) => g.items.length > 0);
+    const abbrevTotal = ABB.reduce((n, g) => n + g.items.length, 0);
+    const abbrevShown = abbrevGroups.reduce((n, g) => n + g.count, 0);
+
+    // ===== RELATED-REACTIONS MAP =====
+    const mapHubs = this.data
+      .filter((r) => (r.related || []).length > 0)
+      .slice()
+      .sort((a, b) => (b.related || []).length - (a.related || []).length || a.name.localeCompare(b.name))
+      .slice(0, 40)
+      .map((r) => ({
+        name: r.name,
+        catColor: this.catColor(r.category),
+        countLabel: (r.related || []).length + ' linked',
+        onFocus: () => this.mapFocus(r.id)
+      }));
+    const mapFocusId = this.state.mapFocusId;
+    let mapCenter = null, mapNodes = [], mapLines = [];
+    if (mapFocusId && byId[mapFocusId]) {
+      const fr = byId[mapFocusId];
+      const relIds = (fr.related || []).map((rid) => byId[rid]).filter(Boolean);
+      const n = relIds.length;
+      const radius = 130;
+      mapNodes = relIds.map((rr, i) => {
+        const angle = -90 + (i * 360) / n;
+        const rad = (angle * Math.PI) / 180;
+        const dx = Math.cos(rad) * radius;
+        const dy = Math.sin(rad) * radius;
+        return {
+          name: rr.name,
+          left: `calc(50% + ${dx}px)`,
+          top: `calc(50% + ${dy}px)`,
+          borderColor: this.catColor(rr.category),
+          onFocus: () => this.mapFocus(rr.id)
+        };
+      });
+      mapLines = relIds.map((rr, i) => ({ angle: -90 + (i * 360) / n, len: radius }));
+      mapCenter = {
+        name: fr.name,
+        summary: fr.summary,
+        color: this.catColor(fr.category),
+        onOpen: () => this.openDetail(fr.id)
+      };
+    }
+
+    // ===== GLOBAL SEARCH =====
+    const sq = (this.state.searchQuery || '').trim().toLowerCase();
+    let searchReactionResults = [], searchAbbrevResults = [];
+    if (sq) {
+      searchReactionResults = this.data
+        .filter((r) => r.name.toLowerCase().includes(sq) || (r.summary || '').toLowerCase().includes(sq))
+        .slice(0, 25)
+        .map((r) => Object.assign(this.vm(r), { onOpen: () => { this.closeSearch(); this.setState({ tab: 'directory', detailId: r.id }); } }));
+      const flatAbbrev = [];
+      ABB.forEach((g) => g.items.forEach((it) => flatAbbrev.push(it)));
+      searchAbbrevResults = flatAbbrev
+        .filter((it) => (it.a || '').toLowerCase().includes(sq) || (it.full || '').toLowerCase().includes(sq) || (it.note || '').toLowerCase().includes(sq))
+        .slice(0, 25)
+        .map((it) => ({ a: it.a, full: it.full, note: it.note, onOpen: () => this.goToAbbrev(it.a) }));
+    }
+
+    const dark = this.state.darkMode;
+
+    // ===== REACTION OF THE DAY =====
+    let rod = { name: '', catColor: '', onOpen: () => {} };
+    if (this.data.length) {
+      const dayNum = Math.floor(Date.now() / 86400000);
+      const idx = dayNum % this.data.length;
+      const r = this.data[idx];
+      rod = { name: r.name, catColor: this.catColor(r.category), onOpen: () => this.openDetail(r.id) };
+    }
+
     return {
       loaded: this.state.loaded,
       total: this.data.length,
+      rootStyle: 'position:fixed;inset:0;background:#f5f2ea;display:flex;flex-direction:column;overflow:hidden;'
+        + (dark ? 'filter:invert(1) hue-rotate(180deg);' : ''),
+      imgCounterFilter: dark ? 'filter:invert(1) hue-rotate(180deg);' : '',
+      darkIcon: dark ? '☀' : '☾',
+      onToggleDark: () => this.toggleDarkMode(),
+      onOpenCheatSheet: () => this.openCheatSheet(),
+      hasStreak: this.state.streak > 1,
+      streakLabel: this.state.streak + '-day streak',
+      rod,
+      onSurprise: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.surpriseMe(); },
+
+      showMenu: this.state.showMenu,
+      onOpenMenu: () => this.openMenu(),
+      onCloseMenu: () => this.closeMenu(),
+      stopProp: (e) => { if (e && e.stopPropagation) e.stopPropagation(); },
+      darkModeLabel: dark ? 'Light mode' : 'Dark mode',
+      creatorName: 'Dr. Sripati Jana',
+      creatorUrl: 'https://sripatijana.github.io/',
+      menu: {
+        directory: () => this.navTo('directory'),
+        timeline: () => this.navTo('explore', 'timeline'),
+        category: () => this.navTo('explore', 'category'),
+        groups: () => this.navTo('explore', 'groups'),
+        abbrev: () => this.navTo('explore', 'abbrev'),
+        map: () => this.navTo('explore', 'map'),
+        quiz: () => this.navTo('quiz'),
+        favorites: () => this.navTo('favorites')
+      },
+      menuItemStyle: (() => {
+        const base = 'display:flex;align-items:center;gap:12px;padding:13px 20px;cursor:pointer;font-family:\'Spectral\',serif;font-weight:500;font-size:15.5px;';
+        const activeStyle = base + 'background:oklch(0.94 0.03 25);color:oklch(0.42 0.11 25);';
+        const normalStyle = base + 'color:#211d18;';
+        const isExplore = tab === 'explore';
+        const ev = this.state.exploreView;
+        return {
+          directory: base + (tab === 'directory' ? 'background:oklch(0.94 0.03 25);color:oklch(0.42 0.11 25);' : 'color:#211d18;'),
+          timeline: base + (isExplore && ev === 'timeline' ? 'background:oklch(0.94 0.03 25);color:oklch(0.42 0.11 25);' : 'color:#211d18;'),
+          category: base + (isExplore && ev === 'category' ? 'background:oklch(0.94 0.03 25);color:oklch(0.42 0.11 25);' : 'color:#211d18;'),
+          groups: base + (isExplore && ev === 'groups' ? 'background:oklch(0.94 0.03 25);color:oklch(0.42 0.11 25);' : 'color:#211d18;'),
+          abbrev: base + (isExplore && ev === 'abbrev' ? 'background:oklch(0.94 0.03 25);color:oklch(0.42 0.11 25);' : 'color:#211d18;'),
+          map: base + (isExplore && ev === 'map' ? 'background:oklch(0.94 0.03 25);color:oklch(0.42 0.11 25);' : 'color:#211d18;'),
+          quiz: base + (tab === 'quiz' ? 'background:oklch(0.94 0.03 25);color:oklch(0.42 0.11 25);' : 'color:#211d18;'),
+          favorites: base + (tab === 'favorites' ? 'background:oklch(0.94 0.03 25);color:oklch(0.42 0.11 25);' : 'color:#211d18;'),
+          plain: normalStyle
+        };
+      })(),
       showDirectory: tab === 'directory',
       showFavorites: tab === 'favorites',
       showExplore: tab === 'explore',
@@ -965,6 +1459,17 @@ class Component extends DCLogic {
       segTimeline: { onSel: () => this.setExploreView('timeline'), style: this.segStyle(this.state.exploreView === 'timeline') },
       segCategory: { onSel: () => this.setExploreView('category'), style: this.segStyle(this.state.exploreView === 'category') },
       segGroups: { onSel: () => this.setExploreView('groups'), style: this.segStyle(this.state.exploreView === 'groups') },
+      segAbbrev: { onSel: () => this.setExploreView('abbrev'), style: this.segStyle(this.state.exploreView === 'abbrev') },
+      showAbbrev: this.state.exploreView === 'abbrev',
+      abbrevGroups,
+      abbrevQuery,
+      abbrevHasQuery: abbrevQuery.length > 0,
+      abbrevEmpty: abbrevShown === 0,
+      abbrevCountLabel: abbrevQuery
+        ? abbrevShown + ' of ' + abbrevTotal + ' abbreviations'
+        : abbrevTotal + ' abbreviations · reagents, solvents, protecting groups & more',
+      onAbbrevSearch: (e) => this.setAbbrevQuery(e && e.target ? e.target.value : ''),
+      onAbbrevClear: () => this.setAbbrevQuery(''),
 
       // explore: timeline
       eras,
@@ -1011,6 +1516,39 @@ class Component extends DCLogic {
       quizResultMsg: resultMsg,
       quizResultRing: `oklch(0.5 0.13 ${resultRingHue})`,
       quizNewBest: this.state.quizDone && finalScore >= this.state.quizBest && finalScore > 0,
+
+      hasWeakSpots: weakCount > 0,
+      weakCountLabel: weakCount === 1 ? '1 reaction' : weakCount + ' reactions',
+      onSelectWeak: () => this.setQuizScope('weak'),
+      weakCardBg: weakSelected ? 'oklch(0.94 0.05 55)' : '#fff',
+      weakCardBorder: weakSelected ? 'oklch(0.65 0.12 55)' : 'rgba(33,29,24,.12)',
+      weakCheck: weakSelected ? '✓' : '',
+      diffScopes,
+
+      // global search
+      onOpenSearch: () => this.openSearch(),
+      onCloseSearch: () => this.closeSearch(),
+      showSearch: this.state.showSearch,
+      searchQuery: this.state.searchQuery,
+      onSearchInput: (e) => this.setSearchQuery(e && e.target ? e.target.value : ''),
+      searchEmpty: sq.length === 0,
+      searchNoResults: sq.length > 0 && searchReactionResults.length === 0 && searchAbbrevResults.length === 0,
+      searchHasReactions: searchReactionResults.length > 0,
+      searchHasAbbrev: searchAbbrevResults.length > 0,
+      searchReactionResults,
+      searchAbbrevResults,
+
+      showMap: this.state.exploreView === 'map',
+      segMap: { onSel: () => this.setExploreView('map'), style: this.segStyle(this.state.exploreView === 'map') },
+      mapPicking: !mapFocusId,
+      mapFocused: !!mapFocusId,
+      mapHubs,
+      mapCenter: mapCenter || { name: '', summary: '', color: '', onOpen: () => {} },
+      mapNodes,
+      mapLines,
+      mapHasHistory: this.state.mapHistory.length > 0,
+      onMapBack: () => this.mapBack(),
+      onMapReset: () => this.mapReset(),
 
       showZoom: !!this.state.zoom,
       zoomImgUrl: this.state.zoom ? this.state.zoom.src : '',

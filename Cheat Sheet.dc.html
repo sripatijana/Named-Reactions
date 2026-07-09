@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Spectral:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="nr-data.js"></script>
+<script src="nr-data-ext.js"></script>
+<template id="__bundler_thumbnail"><svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg"><rect width="180" height="180" fill="#f5f2ea"></rect><g fill="none" stroke="#7a2f2f" stroke-width="6"><line x1="45" y1="55" x2="135" y2="55"></line><line x1="45" y1="80" x2="135" y2="80"></line><line x1="45" y1="105" x2="135" y2="105"></line><line x1="45" y1="130" x2="100" y2="130"></line></g></svg></template>
+<style>doc-page:not(:defined){visibility:hidden}</style>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Spectral', serif; }
+  @media print { .no-print { display: none !important; } }
+</style>
+</helmet>
+
+<div class="no-print" style="max-width:900px;margin:0 auto;padding:18px 24px 0;display:flex;align-items:center;justify-content:space-between;">
+  <div style="font:600 13px/1.4 -apple-system,system-ui;color:#7c766b;">Named Reactions — Cheat Sheet · {{ total }} reactions, grouped by category. Use your browser's Print (Cmd/Ctrl+P) to save as PDF.</div>
+</div>
+
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0.5in" hint-size="100%,1100px">
+
+  <h1 style="font-family:'Spectral',serif;font-weight:700;font-size:22px;margin:0 0 2px;color:#211d18;">Named Reactions — Cheat Sheet</h1>
+  <div style="font:600 10px/1.4 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#8a8378;margin-bottom:14px;">{{ total }} reactions · grouped by category</div>
+
+  <sc-for list="{{ catGroups }}" as="cg" hint-placeholder-count="6">
+    <div style="break-inside:avoid;margin-bottom:4px;">
+      <h2 style="font-family:'Spectral',serif;font-weight:700;font-size:13px;letter-spacing:.03em;text-transform:uppercase;color:{{ cg.color }};border-bottom:1.5px solid {{ cg.color }};padding-bottom:3px;margin:16px 0 6px;">{{ cg.label }} <span style="font-weight:500;color:#a49d90;">· {{ cg.count }}</span></h2>
+    </div>
+    <div style="columns:2;column-gap:22px;margin-bottom:6px;">
+      <sc-for list="{{ cg.items }}" as="it" hint-placeholder-count="6">
+        <div style="break-inside:avoid;font-size:9.5px;line-height:1.45;color:#33302a;padding:2px 0;">
+          <span style="font-weight:700;color:#211d18;">{{ it.name }}</span>
+          <span style="color:#8a8378;"> ({{ it.year }})</span>
+          <span> — {{ it.summary }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-for>
+
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { loaded: false };
+  constructor(props) {
+    super(props);
+    this.data = [];
+    this.cats = {};
+    this.CAT_HUE = {
+      addition: 25, condensation: 70, coupling: 250, oxidation: 305,
+      reduction: 150, rearrangement: 40, substitution: 210,
+      elimination: 350, multicomponent: 285, pericyclic: 135
+    };
+  }
+  componentDidMount() {
+    const load = (tries) => {
+      const d = window.NR_DATA;
+      if (d && d.reactions) {
+        this.data = d.reactions;
+        this.cats = d.categories || {};
+        this.setState({ loaded: true });
+      } else if (tries > 0) {
+        setTimeout(() => load(tries - 1), 60);
+      }
+    };
+    load(60);
+    let lastLen = 0, polls = 0;
+    const watch = setInterval(() => {
+      const d = window.NR_DATA;
+      const len = d && d.reactions ? d.reactions.length : 0;
+      if (len && len !== lastLen) { lastLen = len; this.data = d.reactions; this.forceUpdate(); }
+      if (++polls > 40) clearInterval(watch);
+    }, 75);
+  }
+  catColor(cat) {
+    const h = this.CAT_HUE[cat] != null ? this.CAT_HUE[cat] : 25;
+    return `oklch(0.4 0.12 ${h})`;
+  }
+  catLabel(cat) { return (this.cats[cat] || cat || '').toString(); }
+
+  renderVals() {
+    const catMap = {};
+    this.data.forEach((r) => { (catMap[r.category] = catMap[r.category] || []).push(r); });
+    const catGroups = Object.keys(catMap).map((c) => ({
+      label: this.catLabel(c),
+      color: this.catColor(c),
+      count: catMap[c].length,
+      items: catMap[c].slice().sort((a, b) => a.name.localeCompare(b.name)).map((r) => ({
+        name: r.name, year: r.year, summary: r.summary
+      }))
+    })).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+
+    return {
+      total: this.data.length,
+      catGroups
+    };
+  }
+}
+</script>
+</body>
+</html>

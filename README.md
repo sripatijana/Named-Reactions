@@ -8,6 +8,8 @@ contents of this folder over your existing files (same paths).
 - `nr-data.js` — core reaction dataset (173 reactions)
 - `nr-data-ext.js` — extension pack (96 more reactions → 269 total)
 - `nr-fg.js` — functional-group transformation index (powers Explore ▸ Groups)
+- `nr-abbrev.js` — abbreviations glossary (445 entries; some carry a `smiles` field for structure drawing)
+- `nr-smiles.js` — source SMILES map (reference; SMILES are already baked into nr-abbrev.js)
 - `support.js` — runtime (do not edit)
 - `sw.js` — offline service worker (cache bumped to v6)
 - `index.html` — generated single-file bundle (regenerate if you change the source)
